@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkillCures — Your career in pharmacy has a home</title>
+  <meta name="description" content="Pharma-specific jobs, courses, mentorship, community and research for students, professionals, recruiters and colleges in India. One login for the whole profession." />
+  <meta name="theme-color" content="#04081a" />
+  <link rel="icon" href="./favicon.png" type="image/png" />
+</head>
+<body>
+  <a class="skip" href="#hero">Skip to content</a>
+
+  <!-- The 3D world renders here -->
+  <canvas id="world" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Loader -->
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <img src="./brand/icon.png" alt="" width="72" height="72" />
+    <div class="loader__bar"><i id="loader-bar"></i></div>
+    <p><span id="loader-label">Preparing the lab</span> <b id="loader-pct">000</b></p>
+  </div>
+
+  <!-- Top bar -->
+  <header class="top" id="top">
+    <a class="top__logo" href="#hero" data-go="0" aria-label="SkillCures — back to start">
+      <img src="./brand/logo-white.png" alt="SkillCures" width="1477" height="224" />
+    </a>
+    <nav class="top__nav" aria-label="Pages">
+      <a href="https://www.skillcures.in/patent/">Patents</a>
+      <a href="https://www.skillcures.in/community/">Our Community</a>
+      <a href="https://www.skillcures.in/mentors/">Mentors</a>
+    </nav>
+    <a class="btn btn--primary btn--sm" href="https://www.skillcures.in/signup/">Get started</a>
+  </header>
+
+  <!-- Chapter rail: fly anywhere -->
+  <nav class="rail" id="rail" aria-label="Contents">
+    <ol>
+      <li><a href="#hero" data-go="0"><span>Start</span><i>00</i></a></li>
+      <li><a href="#deck" data-go="1"><span>Your next step</span><i>01</i></a></li>
+      <li><a href="#how-it-works" data-go="2"><span>How it works</span><i>02</i></a></li>
+      <li><a href="#patents" data-go="3"><span>Patents</span><i>03</i></a></li>
+      <li><a href="#community" data-go="4"><span>Community</span><i>04</i></a></li>
+      <li><a href="#mentors" data-go="5"><span>Mentors</span><i>05</i></a></li>
+      <li><a href="#join" data-go="6"><span>Join</span><i>06</i></a></li>
+    </ol>
+  </nav>
+
+  <!-- Flight controls -->
+  <div class="hud" id="hud">
+    <div class="hud__chapter" aria-hidden="true">
+      <b id="hud-num">00</b><span>/ 06</span><em id="hud-name">Start</em>
+    </div>
+    <div class="hud__hint" id="hud-hint" aria-hidden="true">
+      <span class="mouse"><i></i></span>
+      <span class="hud__hint-text">Scroll, swipe or use arrow keys · drag to look around</span>
+    </div>
+    <div class="hud__nav">
+      <button type="button" id="prev" aria-label="Previous chapter" disabled>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" id="next" aria-label="Next chapter">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- 00 · Hero -->
+    <section class="station station--left" id="hero" data-station="0" aria-labelledby="hero-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r>Pharma-first · India</p>
+        <h1 id="hero-h" data-r>Your career in pharmacy <span class="grad">has a <span class="swap" data-words="home.|future.|power.">home.</span></span></h1>
+        <p class="lede" data-r>Jobs, courses, mentors and research for pharma roles — QA, QC, RA, PV, clinical research and more. One profile. One login.</p>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/signup/">Get started</a>
+          <button class="btn btn--ghost" type="button" data-go="1">Take the tour <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="fine" data-r>Free for students and professionals · Plans for recruiters and colleges</p>
+        <ul class="chips" data-r>
+          <li><b>700+</b> pharmacy colleges across India</li>
+          <li><b>9</b> career roles, QA to Medical Writing</li>
+          <li><b>1</b> login for jobs, courses, mentors and research</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 01 · Your next step -->
+    <section class="station station--right" id="deck" data-station="1" aria-labelledby="deck-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>01</i> Your dashboard</p>
+        <h2 id="deck-h" data-r>What’s your next step <span class="grad">in pharma?</span></h2>
+        <p class="lede" data-r>Jobs, courses, mentors and research: choose what’s best for you, with SkillCures. They come together in one personalized dashboard for every student.</p>
+        <ul class="quad" data-r>
+          <li class="c-cobalt"><b>Jobs</b><span>2 matches</span></li>
+          <li class="c-pink"><b>Courses</b><span>72% done</span></li>
+          <li class="c-amber"><b>Mentor</b><span>Tue 6 pm</span></li>
+          <li class="c-teal"><b>Research</b><span>In review</span></li>
+        </ul>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/signup/">Get yours at launch</a>
+          <span class="tag">Example dashboard</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · How it works -->
+    <section class="station station--left" id="how-it-works" data-station="2" aria-labelledby="how-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>02</i> How SkillCures works</p>
+        <h2 id="how-h" data-r>Tell us where you are. <span class="grad">We’ll write what’s next.</span></h2>
+        <form class="sentence" id="rx-form" data-r onsubmit="return false">
+          <span>I’m in</span>
+          <label class="pick"><span class="sr">Where you are now</span>
+            <select name="stage">
+              <option value="early">my first years</option>
+              <option value="final" selected>my final year</option>
+              <option value="working">a pharma job</option>
+            </select>
+          </label>
+          <span>, I enjoy</span>
+          <label class="pick"><span class="sr">What you enjoy</span>
+            <select name="likes">
+              <option value="lab" selected>lab work</option>
+              <option value="documents">writing documents</option>
+              <option value="people">working with people</option>
+              <option value="data">working with data</option>
+            </select>
+          </label>
+          <span>and I want</span>
+          <label class="pick"><span class="sr">What you want next</span>
+            <select name="goal">
+              <option value="job" selected>a job</option>
+              <option value="switch">a new department</option>
+              <option value="study">higher studies</option>
+            </select>
+          </label>
+          <span>.</span>
+        </form>
+        <div class="rx-out" data-r aria-live="polite">
+          <p class="rx-out__label">Your prescription <span class="tag">Example</span></p>
+          <p class="rx-out__dx" id="rx-dx">Loves the lab → Quality Control</p>
+          <ul class="rx-out__cards" id="rx-cards"></ul>
+        </div>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/signup/">Get your plan at launch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · Patents -->
+    <section class="station station--right" id="patents" data-station="3" aria-labelledby="pat-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>03</i> Patents</p>
+        <h2 id="pat-h" data-r>From an idea <span class="grad">to the patent office.</span></h2>
+        <p class="lede" data-r>Join a patent application filed by the SkillCures team, or protect an invention of your own. We handle the drafting, the forms and the filing — you get the proof.</p>
+        <ul class="duo" data-r>
+          <li class="c-cobalt"><b>Team patent</b><span>About 5 minutes to apply</span></li>
+          <li class="c-teal"><b>Your own patent</b><span>About 10 minutes to apply</span></li>
+        </ul>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/patent/">Explore patents <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · Community -->
+    <section class="station station--left" id="community" data-station="4" aria-labelledby="com-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>04</i> Community</p>
+        <h2 id="com-h" data-r>A clearer mind <span class="grad">for a brighter you.</span></h2>
+        <p class="lede" data-r>Students, professionals, researchers and mentors across pharmacy &amp; biotech, learning from experts, building on each other’s ideas, and turning them into careers.</p>
+        <ul class="duo" data-r>
+          <li class="c-cobalt"><b>Events</b><span>Masterclasses, hackathons and career roundtables</span></li>
+          <li class="c-teal"><b>Circles</b><span>Each one led by someone working in the field</span></li>
+        </ul>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/community/">Explore the community <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · Mentors -->
+    <section class="station station--right" id="mentors" data-station="5" aria-labelledby="men-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>05</i> Mentors</p>
+        <h2 id="men-h" data-r>Your next step in pharma, <span class="grad">with someone who’s taken it.</span></h2>
+        <p class="lede" data-r>Students learn from people who’ve worked the role they want. Pharma professionals give back as mentors.</p>
+        <div class="doors" data-r>
+          <a class="door door--teal" href="https://www.skillcures.in/mentors/">
+            <small>For students</small>
+            <b>Find a mentor who’s done the job</b>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="door door--cobalt" href="https://www.skillcures.in/mentors/">
+            <small>For pharma professionals</small>
+            <b>Become a mentor</b>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · Join -->
+    <section class="station station--center" id="join" data-station="6" aria-labelledby="join-h">
+      <div class="station__in">
+        <p class="eyebrow" data-r><i>06</i> Join SkillCures</p>
+        <h2 id="join-h" data-r>Your pharma career <span class="grad">starts <span class="swap" data-words="here.|now.|today.">here.</span></span></h2>
+        <p class="lede" data-r>Get on the list and be first in when SkillCures opens.</p>
+        <form class="join" id="join-form" data-r novalidate>
+          <label class="sr" for="email">Email address</label>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Enter your email" required />
+          <button class="btn btn--primary" type="submit">Get early access</button>
+          <p class="join__msg" id="join-msg" role="status"></p>
+        </form>
+        <ul class="stats" data-r>
+          <li><b data-count="12400">12,400</b><span>students in the community</span></li>
+          <li><b data-count="320">320</b><span>patent applications filed</span></li>
+          <li><b data-count="850">850</b><span>mentors in the roles you want</span></li>
+        </ul>
+        <p class="fine fine--tags" data-r><span class="tag">Sample numbers</span></p>
+        <div class="colleges" data-r>
+          <p>Students from <span class="grad">India’s top pharmacy colleges</span></p>
+          <div class="marquee" aria-label="Colleges">
+            <ul id="marquee"></ul>
+          </div>
+        </div>
+        <footer class="foot" data-r>
+          <span>The professional ecosystem for pharmacy &amp; pharma careers</span>
+          <span class="foot__links">
+            <a href="https://www.skillcures.in/community/">Community Hub</a>
+            <a href="https://www.skillcures.in/community/#events">Webinars &amp; Events</a>
+            <a href="https://www.skillcures.in/community/#ideas">Idea Incubator</a>
+            <a href="https://www.skillcures.in/signup/">Create Account</a>
+          </span>
+          <span>© 2026 SkillCures</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scroll length lives here; the camera reads it -->
+  <div id="track" aria-hidden="true"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
