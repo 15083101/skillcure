@@ -43,32 +43,47 @@ Drag the background to look around; hover or tap a pill to make it jump.
 
 ## Community page (`community/index.html`)
 
-A second 3D page for the community, set in **Poppins** (headings), **Geist** (text) and **Geist Mono**
-(labels, console, file tabs). Concept: *the community is a molecule*.
+Two engines render one world, driven by one camera rig:
 
-| # | Chapter       | 3D scene                                                                              |
-|---|---------------|---------------------------------------------------------------------------------------|
-| 0 | Hub           | the hero portrait as a sculpture of ~10k dithered pixels; six circles orbit the head as a benzene ring |
-| 1–5 | Pillars     | Learn · Connect · Collaborate · Discover · Grow — five monoliths; the camera trucks along them |
-| 6 | Events        | all 15 events on a ring you can drag, filter by type, or step through                 |
-| 7 | Circles       | back to the molecule from above; pick a circle and it turns to face you              |
-| 8 | Stories       | three verified member stories as arches; photos resolve from pixels into colour       |
-| 9 | Join          | the portrait reassembles and a seventh atom — you — bonds to the ring                 |
+- **Babylon.js** draws the solid world: glass atoms, glow, light cones, the radar, the event ring,
+  photo arches, plus a filmic post-processing pipeline (bloom, ACES tone mapping, chromatic
+  aberration, film grain, vignette) and a glow layer.
+- **three.js** draws the *members*: a swarm of ~14,000 particles on a transparent canvas above,
+  morphing between 15 formations on the GPU while the camera flies.
 
-Photos everywhere use a pixel-dither shader (`src/community/world/shaders.js`) that resolves into full
-colour when that item is in focus. Between chapters you fly through statements taken from the page copy.
+Typography: **Poppins** (headings), **Geist** (text), **Geist Mono** (labels, tabs, console).
+
+| # | Section       | What the swarm becomes                | Babylon.js set piece                      |
+|---|---------------|----------------------------------------|-------------------------------------------|
+| 0 | Hub           | the hero portrait in pixels            | orbits with the six circles riding them   |
+| 1 | Isolated      | one learner, everyone else far away    | a faint sonar                             |
+| 2 | Connected     | a network of hundreds                  | —                                         |
+| 3 | Learn         | a lecture hall facing one practitioner | stage, light cone, seat rows              |
+| 4 | Connect       | a dot-matrix map of India              | city pins, arcs, travelling sparks        |
+| 5 | Collaborate   | a flask and `</>` pulled together      | the bond and its spark                    |
+| 6 | Discover      | radar rings                            | the sweep; opportunities light up         |
+| 7 | Grow          | a double helix                         | rings of growth                           |
+| 8 | Calendar      | a river of time, Oct → Jan             | month gates, 15 event beacons             |
+| 9 | Events        | a halo                                 | ring of all 15 event cards (drag/filter)  |
+|10 | Circles       | member clouds around each atom         | glass atoms with dithered photos          |
+|11–13 | Stories    | each member's path drawn as light      | photo arch, journey nodes, outcome sticker |
+|14 | Join          | a ring with a gap your size            | "you" flies in and fills it               |
+
+Details (pillar bullet points, cities, journey steps) are labels pinned to 3D points, not text blocks.
 
 | What                                   | File                                   |
 |----------------------------------------|----------------------------------------|
-| All copy: pillars, events, circles, stories | `src/community/data.js`           |
-| Page structure                         | `community/index.html`                 |
-| Camera stops, rig, statements          | `src/community/world/index.js`         |
-| Portrait / molecule / scenes           | `src/community/world/{portrait,molecule,scenes}.js` |
-| Canvas artwork (cards, pillars)        | `src/community/world/art.js`           |
-| Scroll, pickers, console, join form    | `src/community/main.js`                |
-| Look and feel                          | `src/community/style.css`              |
+| All copy and data                      | `src/community/data.js`                |
+| Where each section sits + shared geometry | `src/community/engine/layout.js`    |
+| Swarm formations                       | `src/community/engine/formations.js`   |
+| Swarm renderer (three.js)              | `src/community/engine/swarm.js`        |
+| Babylon stage, post, materials, dither shader | `src/community/engine/stage.js` |
+| Babylon set pieces + labels            | `src/community/engine/pieces.js`       |
+| Camera rig, picking, frame loop        | `src/community/engine/index.js`        |
+| Page structure / scroll / panels       | `community/index.html`, `src/community/main.js`, `src/community/style.css` |
 
-Images live in `public/community/` (copied from the live site).
+The engines load as a separate chunk after the page shell. Babylon's shaders are split into small
+on-demand files, so `dist/` contains ~100 JS files (~650 KB gzipped in total including three.js).
 
 ## Where to change things
 
