@@ -98,7 +98,7 @@ export function createDust(count = 1800) {
 }
 
 /** Ball-and-stick ring molecules scattered along the flight path. */
-export function createMolecules() {
+export function createMolecules(customSpots) {
   const group = new THREE.Group();
   const atomGeo = new THREE.SphereGeometry(0.16, 16, 12);
   const bondGeo = new THREE.CylinderGeometry(0.035, 0.035, 1, 8);
@@ -113,7 +113,7 @@ export function createMolecules() {
     m.quaternion.setFromUnitVectors(up, d.normalize());
     return m;
   };
-  const spots = [
+  const spots = customSpots ?? [
     [-10, 7, -9, 1.0], [7.5, -3.5, -6, 0.8], [9, 6, 2, 0.7], [24, -4, -8, 1.1], [5, -9, -4, 0.9], [22, -17, -16, 1.0],
     [2, -8, -20, 1.2], [-20, 4, -22, 0.9], [-4, -9, -34, 1.1], [-16, 12, -42, 1.0], [6, 14, -50, 1.3], [8, 2, -44, 0.8],
     [28, 18, -52, 1.1], [10, 20, -36, 0.9], [-6, 26, -34, 1.2], [14, 36, -36, 1.0], [-8, 34, -24, 0.8], [26, 4, -30, 1.0],

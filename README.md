@@ -41,6 +41,35 @@ Navigation: scroll / swipe (any deliberate scroll carries you to the next chapte
 PageUp/PageDown, Home/End, the chapter rail, the ↑ ↓ buttons, and deep links (`#patents`, `#join`, …).
 Drag the background to look around; hover or tap a pill to make it jump.
 
+## Community page (`community/index.html`)
+
+A second 3D page for the community, set in **Poppins** (headings), **Geist** (text) and **Geist Mono**
+(labels, console, file tabs). Concept: *the community is a molecule*.
+
+| # | Chapter       | 3D scene                                                                              |
+|---|---------------|---------------------------------------------------------------------------------------|
+| 0 | Hub           | the hero portrait as a sculpture of ~10k dithered pixels; six circles orbit the head as a benzene ring |
+| 1–5 | Pillars     | Learn · Connect · Collaborate · Discover · Grow — five monoliths; the camera trucks along them |
+| 6 | Events        | all 15 events on a ring you can drag, filter by type, or step through                 |
+| 7 | Circles       | back to the molecule from above; pick a circle and it turns to face you              |
+| 8 | Stories       | three verified member stories as arches; photos resolve from pixels into colour       |
+| 9 | Join          | the portrait reassembles and a seventh atom — you — bonds to the ring                 |
+
+Photos everywhere use a pixel-dither shader (`src/community/world/shaders.js`) that resolves into full
+colour when that item is in focus. Between chapters you fly through statements taken from the page copy.
+
+| What                                   | File                                   |
+|----------------------------------------|----------------------------------------|
+| All copy: pillars, events, circles, stories | `src/community/data.js`           |
+| Page structure                         | `community/index.html`                 |
+| Camera stops, rig, statements          | `src/community/world/index.js`         |
+| Portrait / molecule / scenes           | `src/community/world/{portrait,molecule,scenes}.js` |
+| Canvas artwork (cards, pillars)        | `src/community/world/art.js`           |
+| Scroll, pickers, console, join form    | `src/community/main.js`                |
+| Look and feel                          | `src/community/style.css`              |
+
+Images live in `public/community/` (copied from the live site).
+
 ## Where to change things
 
 | What                                   | File                         |
