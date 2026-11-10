@@ -13,7 +13,7 @@ export const COLORS = {
 };
 
 export const CHAPTERS = [
-  { id: 'hero', name: 'Start' },
+  { id: 'hero', name: 'What’s inside' },
   { id: 'deck', name: 'Your next step' },
   { id: 'how-it-works', name: 'How it works' },
   { id: 'patents', name: 'Patents' },

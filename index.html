@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SkillCures — Your career in pharmacy has a home</title>
+  <title>SkillCures — Your whole pharma career, in one capsule</title>
   <meta name="description" content="Pharma-specific jobs, courses, mentorship, community and research for students, professionals, recruiters and colleges in India. One login for the whole profession." />
   <meta name="theme-color" content="#04081a" />
   <link rel="icon" href="./favicon.png" type="image/png" />
@@ -15,11 +15,19 @@
   <canvas id="world" aria-hidden="true"></canvas>
   <div class="vignette" aria-hidden="true"></div>
 
+  <!-- Composition call-outs: labels pinned to the four "ingredients" inside the 3D capsule -->
+  <div class="callouts" id="callouts" aria-hidden="true">
+    <div class="callout c-cobalt"><i class="callout__line"></i><i class="callout__dot"></i><p><b>01 Jobs</b><span>QA, QC, RA, PV and more</span></p></div>
+    <div class="callout c-pink"><i class="callout__line"></i><i class="callout__dot"></i><p><b>02 Courses</b><span>Built for pharma roles</span></p></div>
+    <div class="callout c-amber"><i class="callout__line"></i><i class="callout__dot"></i><p><b>03 Mentors</b><span>People who’ve done the job</span></p></div>
+    <div class="callout c-teal"><i class="callout__line"></i><i class="callout__dot"></i><p><b>04 Research</b><span>Papers and patents</span></p></div>
+  </div>
+
   <!-- Loader -->
   <div class="loader" id="loader" role="status" aria-live="polite">
     <img src="./brand/icon.png" alt="" width="72" height="72" />
     <div class="loader__bar"><i id="loader-bar"></i></div>
-    <p><span id="loader-label">Preparing the lab</span> <b id="loader-pct">000</b></p>
+    <p><span id="loader-label">Compounding</span> <b id="loader-pct">000</b></p>
   </div>
 
   <!-- Top bar -->
@@ -38,7 +46,7 @@
   <!-- Chapter rail: fly anywhere -->
   <nav class="rail" id="rail" aria-label="Contents">
     <ol>
-      <li><a href="#hero" data-go="0"><span>Start</span><i>00</i></a></li>
+      <li><a href="#hero" data-go="0"><span>What’s inside</span><i>00</i></a></li>
       <li><a href="#deck" data-go="1"><span>Your next step</span><i>01</i></a></li>
       <li><a href="#how-it-works" data-go="2"><span>How it works</span><i>02</i></a></li>
       <li><a href="#patents" data-go="3"><span>Patents</span><i>03</i></a></li>
@@ -51,7 +59,7 @@
   <!-- Flight controls -->
   <div class="hud" id="hud">
     <div class="hud__chapter" aria-hidden="true">
-      <b id="hud-num">00</b><span>/ 06</span><em id="hud-name">Start</em>
+      <b id="hud-num">00</b><span>/ 06</span><em id="hud-name">What’s inside</em>
     </div>
     <div class="hud__hint" id="hud-hint" aria-hidden="true">
       <span class="mouse"><i></i></span>
@@ -68,22 +76,23 @@
   </div>
 
   <main id="main">
-    <!-- 00 · Hero -->
+    <!-- 00 · Hero — "what's inside": the product, explained like a medicine label -->
     <section class="station station--left" id="hero" data-station="0" aria-labelledby="hero-h">
       <div class="station__in">
-        <p class="eyebrow" data-r>Pharma-first · India</p>
-        <h1 id="hero-h" data-r>Your career in pharmacy <span class="grad">has a <span class="swap" data-words="home.|future.|power.">home.</span></span></h1>
+        <p class="eyebrow" data-r><b class="rx" aria-hidden="true">R<sub>x</sub></b> Pharma-first · India</p>
+        <h1 id="hero-h" data-r>Your whole pharma career, <span class="grad">in one capsule.</span></h1>
         <p class="lede" data-r>Jobs, courses, mentors and research for pharma roles — QA, QC, RA, PV, clinical research and more. One profile. One login.</p>
         <div class="cta-row" data-r>
           <a class="btn btn--primary" href="https://www.skillcures.in/signup/">Get started</a>
-          <button class="btn btn--ghost" type="button" data-go="1">Take the tour <span aria-hidden="true">→</span></button>
+          <button class="btn btn--ghost" type="button" data-go="1">Open the capsule <span aria-hidden="true">→</span></button>
         </div>
-        <p class="fine" data-r>Free for students and professionals · Plans for recruiters and colleges</p>
-        <ul class="chips" data-r>
-          <li><b>700+</b> pharmacy colleges across India</li>
-          <li><b>9</b> career roles, QA to Medical Writing</li>
-          <li><b>1</b> login for jobs, courses, mentors and research</li>
-        </ul>
+        <dl class="facts" data-r aria-label="SkillCures at a glance">
+          <div><dt>Composition</dt><dd><i class="c-cobalt"></i>Jobs <i class="c-pink"></i>Courses <i class="c-amber"></i>Mentors <i class="c-teal"></i>Research</dd></div>
+          <div><dt>Made for</dt><dd>Students · Professionals · Recruiters · Colleges</dd></div>
+          <div><dt>Roles</dt><dd>9 career roles, QA to Medical Writing</dd></div>
+          <div><dt>Dosage</dt><dd>1 profile · 1 login</dd></div>
+          <div><dt>Price</dt><dd>Free for students and professionals</dd></div>
+        </dl>
       </div>
     </section>
 

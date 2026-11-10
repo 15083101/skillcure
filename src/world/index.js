@@ -8,7 +8,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { COLORS } from '../data.js';
 import { STATIONS, N, buildLegs, camPos, focusOf, yawOf, travel, smooth, smoother } from './layout.js';
 import { createCrew } from './pills.js';
-import { createStations, POSES } from './stations.js';
+import { createStations, POSES, HERO_CALLOUTS } from './stations.js';
+import { drawStatement, texture as cardTexture } from './cards.js';
 import { createSky, createDust, createMolecules } from './env.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -58,6 +59,26 @@ export function createWorld({ canvas, icon, calm = false, quality = 'auto' }) {
   const stations = createStations({ icon, aniso });
   const crew = createCrew();
   scene.add(sky.mesh, dust.points, molecules.group, stations.root, crew.group);
+
+  // ── fly-through statements: one verb per leg, attached to the camera so you always fly through it ──
+  const STATEMENTS = [
+    ['FIND', 'your next step'],
+    ['PLAN', 'we write what’s next'],
+    ['INVENT', 'idea to patent office'],
+    ['BELONG', 'a clearer mind, a brighter you'],
+    ['ASK', 'someone who’s taken the step'],
+    ['BEGIN', 'your pharma career starts here'],
+  ];
+  const statements = calm ? [] : STATEMENTS.map(([word, caption], k) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(17, 17 * (620 / 1800)),
+      new THREE.MeshBasicMaterial({ map: cardTexture(drawStatement(word, caption, `0${k + 1}`), aniso), transparent: true, opacity: 0, depthWrite: false, fog: false, blending: THREE.AdditiveBlending }),
+    );
+    m.visible = false;
+    m.renderOrder = 1;
+    camera.add(m);
+    return m;
+  });
 
   // ── post ───────────────────────────────────────────────────────────────
   const target = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, samples: coarse ? 2 : 4 });
@@ -187,6 +208,26 @@ export function createWorld({ canvas, icon, calm = false, quality = 'auto' }) {
       pill.appear = ap === 0 ? 0.0001 : 1 + Math.sin(ap * Math.PI) * 0.18 * (1 - ap) - (1 - ap) ** 3;
     });
 
+    // the capsule: sealed at rest, cracks open as you leave the hero, seals again as you arrive at Join
+    const introOpen = 1 - smooth((rig.intro - 0.62) / 0.3);
+    const heroOpen = Math.max(introOpen, smooth((p - 0.02) / 0.16));
+    const joinOpen = 1 - smooth((p - (N - 1 - 0.12)) / 0.115);
+    stations.setCapsules(heroOpen, joinOpen);
+    rig.heroOpen = heroOpen;
+
+    // statements: far away → rush past the lens, mid-flight only
+    statements.forEach((m, k) => {
+      const s = k === i ? (f - 0.17) / 0.56 : -1;
+      if (s <= 0 || s >= 1) { m.visible = false; return; }
+      m.visible = true;
+      const z = -(64 * (1 - s) ** 1.7 + 3.4);
+      const k2 = Math.min(1, aspect / 1.45);
+      m.scale.setScalar(k2);
+      m.position.set((k % 2 ? 1 : -1) * (1 - s) * 5 * k2, (1 - s) * 1.2 - 0.2, z);
+      m.rotation.z = rig.roll * -1.5;
+      m.material.opacity = smooth(s / 0.22) * (1 - smooth((s - 0.7) / 0.3)) * 0.92;
+    });
+
     // only draw chapters that are near
     stations.groups.forEach((g, k) => { g.visible = Math.abs(p - k) < 1.25; });
     return { p, i, e };
@@ -284,6 +325,25 @@ export function createWorld({ canvas, icon, calm = false, quality = 'auto' }) {
     get progress() { return rig.p; },
     get introDone() { return rig.intro >= 1; },
     setRx: stations.setRx,
+    /** Screen positions (px) of the hero composition call-outs + how visible they should be. */
+    callouts(out) {
+      const g = stations.groups[0];
+      camera.updateMatrixWorld();
+      HERO_CALLOUTS.forEach((c, k) => {
+        const o = out[k] ?? (out[k] = {});
+        // phones: the copy sits right under the capsule, so every label goes above it, in two staggered rows
+        const flip = mobileMQ.matches && c.dir < 0;
+        ['a', 'b'].forEach((key) => {
+          v.set(c[key][0], c[key][1], c[key][2]);
+          if (flip) v.y = key === 'a' ? 0.1 - c.a[1] : 0.1 - c.b[1] + 0.62;
+          g.localToWorld(v).project(camera);
+          o[`${key}x`] = (v.x * 0.5 + 0.5) * W;
+          o[`${key}y`] = (-v.y * 0.5 + 0.5) * H;
+        });
+        o.dir = flip ? 1 : c.dir;
+      });
+      return rig.intro >= 1 ? 1 - Math.min(1, rig.heroOpen * 3) : 0;
+    },
     onFrame(fn) { onFrame = fn; },
     cams,
   };

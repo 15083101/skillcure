@@ -4,6 +4,7 @@ import { COLORS } from '../data.js';
 
 export const DISPLAY = '"Bricolage Grotesque Variable", "Bricolage Grotesque", system-ui, sans-serif';
 export const BODY = '"Schibsted Grotesk Variable", "Schibsted Grotesk", system-ui, sans-serif';
+export const MONO = '"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace';
 export const HAND = '"Caveat", "Segoe Script", cursive';
 
 const SOLID = {
@@ -339,6 +340,24 @@ export function drawScreen(color) {
   g.fillStyle = 'rgba(255,255,255,.35)';
   [36, 54].forEach((y) => { rr(g, 112, y, 96, 7, 3); g.fill(); });
   [88, 106, 124].forEach((y, i) => { rr(g, 14, y, 218 - i * 38, 8, 4); g.fill(); });
+  return c;
+}
+
+// ── Fly-through statement: one huge verb + a caption, drawn for additive blending ─
+export function drawStatement(word, caption, index) {
+  const W = 1800, H = 620;
+  const { c, g } = canvas(W, H, 1);
+  let size = 400;
+  font(g, 800, size, DISPLAY);
+  g.letterSpacing = '-8px';
+  while (g.measureText(word).width > W - 120 && size > 120) { size -= 10; font(g, 800, size, DISPLAY); }
+  const grd = g.createLinearGradient(W * 0.2, 0, W * 0.8, 0);
+  grd.addColorStop(0, '#ffffff'); grd.addColorStop(0.55, '#bfe0ff'); grd.addColorStop(1, '#5ff0dc');
+  g.textAlign = 'center';
+  g.fillStyle = grd;
+  g.fillText(word, W / 2, 400);
+  g.letterSpacing = '0px';
+  text(g, `${index}  —  ${caption}`.toUpperCase(), W / 2, 520, { size: 40, weight: 600, family: MONO, color: 'rgba(210,230,255,.92)', align: 'center', spacing: 9 });
   return c;
 }
 

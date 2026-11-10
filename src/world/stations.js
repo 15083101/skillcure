@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { COLORS, JOURNEY } from '../data.js';
 import { STATIONS, focusOf, yawOf } from './layout.js';
 import * as draw from './cards.js';
+import { createCapsule } from './capsule.js';
 
 const D = Math.PI / 180;
 const C = (hex, k = 1) => new THREE.Color(hex).multiplyScalar(k);
@@ -58,34 +59,29 @@ export function createStations({ icon, aniso }) {
     return obj;
   };
 
-  // ── 00 · HERO — the crew at home, orbited like a little atom ────────────
+  // ── 00 · HERO — one glass capsule, four ingredients sealed inside ───────
+  const capsules = {};
   {
     const g = groups[0];
-    const base = new THREE.Mesh(
-      new THREE.CylinderGeometry(3.05, 3.25, 0.32, 72),
-      new THREE.MeshPhysicalMaterial({ color: 0x06227a, roughness: 0.42, metalness: 0.1, clearcoat: 0.5, clearcoatRoughness: 0.4, emissive: C(COLORS.cobalt, 0.12), envMapIntensity: 0.5 }),
-    );
-    base.position.y = -1.86;
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(3.06, 0.022, 8, 120), glow(COLORS.teal, 2.2));
-    rim.rotation.x = Math.PI / 2; rim.position.y = -1.7;
-    const rim2 = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.01, 8, 120), glow(COLORS.cobalt, 1.6, { transparent: true, opacity: 0.6 }));
-    rim2.rotation.x = Math.PI / 2; rim2.position.y = -1.95;
-    const rim3 = new THREE.Mesh(new THREE.TorusGeometry(4.3, 0.007, 8, 120), glow(COLORS.cobalt, 1.2, { transparent: true, opacity: 0.35 }));
-    rim3.rotation.x = Math.PI / 2; rim3.position.y = -2.05;
-    const under = blob(11, 0.55, 'rgba(2,83,235,1)');
-    under.position.y = -2.1;
-    g.add(base, rim, rim2, rim3, under);
-    [[-2.0, 0.2], [-0.55, 0.9], [0.85, 0.35], [2.15, 0.05]].forEach(([x, z]) => {
-      const sh = blob(1.5, 0.55); sh.position.set(x, -1.695, z); g.add(sh);
-    });
-    tickers.push((t) => { const k = 1 + Math.sin(t * 1.4) * 0.012; rim2.scale.setScalar(k); rim3.scale.setScalar(2 - k); });
+    const cap = createCapsule();
+    cap.group.position.set(0, 0.05, 0);
+    cap.group.rotation.z = 0.045;
+    g.add(cap.group);
+    capsules.hero = cap;
+    tickers.push((t) => { cap.group.position.y = 0.05 + Math.sin(t * 0.7) * 0.05; cap.group.rotation.z = 0.045 + Math.sin(t * 0.45) * 0.012; });
 
-    // electron orbits
-    [[4.3, 62, 24, COLORS.teal, 0.42], [4.8, 50, -38, COLORS.cobalt, -0.33], [3.9, 74, 96, COLORS.pink, 0.5]].forEach(([r, tiltX, tiltZ, col, speed], k) => {
+    const under = blob(13, 0.5, 'rgba(2,83,235,1)');
+    under.position.y = -2.6;
+    const inner = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(draw.drawGlow()), color: C(COLORS.cobalt, 1.1), transparent: true, opacity: 0.18, depthWrite: false, blending: THREE.AdditiveBlending }));
+    inner.scale.set(11, 7, 1); inner.position.z = -1.8;
+    g.add(under, inner);
+
+    // electron orbits — the capsule as the nucleus
+    [[4.5, 62, 24, COLORS.teal, 0.42], [5.0, 50, -38, COLORS.cobalt, -0.33], [4.1, 74, 96, COLORS.pink, 0.5]].forEach(([r, tiltX, tiltZ, col, speed], k) => {
       const orbit = new THREE.Group();
       orbit.rotation.set(tiltX * D, 0, tiltZ * D);
       orbit.position.y = 0.1;
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 6, 160), glow(col, 1.2, { transparent: true, opacity: 0.28 }));
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 6, 160), glow(col, 1.2, { transparent: true, opacity: 0.26 }));
       const e = new THREE.Mesh(new THREE.SphereGeometry(0.075, 16, 12), glow(col, 2.6));
       const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(draw.drawGlow()), color: C(col, 1.2), transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending }));
       halo.scale.setScalar(0.7);
@@ -337,33 +333,31 @@ export function createStations({ icon, aniso }) {
     g.add(float(chip, 0.1, 0.8, 0.02));
   }
 
-  // ── 06 · JOIN — the mark itself, with the whole crew around it ──────────
+  // ── 06 · JOIN — the ingredients fly back in and the capsule seals ───────
   {
     const g = groups[6];
-    const mark = new THREE.Group();
-    const t = tex(icon);
-    const LAYERS = 26, DEPTH = 0.4, SIZE = 2.5;
-    const geo = new THREE.PlaneGeometry(SIZE, SIZE);
-    for (let i = 0; i < LAYERS; i++) {
-      const k = i / (LAYERS - 1);
-      const front = i === LAYERS - 1;
-      const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.5, side: THREE.DoubleSide, color: front ? C('#ffffff', 1.12) : C('#ffffff', 0.38 + k * 0.3) }));
-      m.position.z = -DEPTH / 2 + k * DEPTH;
-      mark.add(m);
-    }
-    mark.position.set(0, 0.25, 0);
-    g.add(mark);
-    tickers.push((time) => { mark.rotation.y = Math.sin(time * 0.5) * 0.55; mark.rotation.x = Math.sin(time * 0.37) * 0.08; mark.position.y = 0.25 + Math.sin(time * 0.8) * 0.08; });
+    const cap = createCapsule();
+    cap.group.scale.setScalar(JOIN_SCALE);
+    cap.group.position.set(0, JOIN_Y, 0);
+    g.add(cap.group);
+    capsules.join = cap;
+    tickers.push((t) => { cap.group.position.y = JOIN_Y + Math.sin(t * 0.7) * 0.04; });
 
-    [[2.3, COLORS.teal, 0.5, 0.25], [2.9, COLORS.cobalt, 0.35, -0.18], [3.7, COLORS.cobalt, 0.2, 0.12]].forEach(([r, col, op, sp]) => {
+    [[3.1, COLORS.teal, 0.45, 0.25], [3.7, COLORS.cobalt, 0.32, -0.18], [4.5, COLORS.cobalt, 0.18, 0.12]].forEach(([r, col, op, sp]) => {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.01, 6, 140, Math.PI * 1.6), glow(col, 1.6, { transparent: true, opacity: op }));
-      ring.position.set(0, 0.25, -0.9);
+      ring.position.set(0, JOIN_Y, -1.6);
       g.add(ring);
       spinners.push({ obj: ring, speed: sp, axis: 'z' });
     });
-    const aura = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(draw.drawGlow()), color: C(COLORS.cobalt, 1.2), transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
-    aura.scale.set(13, 9, 1); aura.position.set(0, 0.2, -1.6);
+    const aura = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(draw.drawGlow()), color: C(COLORS.cobalt, 1.2), transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending }));
+    aura.scale.set(14, 9, 1); aura.position.set(0, JOIN_Y, -2.2);
     g.add(aura);
+  }
+
+  /** k = 0 sealed … 1 fully open */
+  function setCapsules(heroOpen, joinOpen) {
+    capsules.hero.setOpen(heroOpen);
+    capsules.join.setOpen(joinOpen);
   }
 
   function update(t, dt, calm) {
@@ -377,10 +371,21 @@ export function createStations({ icon, aniso }) {
     tickers.forEach((fn) => fn(t, dt));
   }
 
-  return { root, groups, update, setRx };
+  return { root, groups, update, setRx, setCapsules };
 }
 
 // ── Where the crew stands in each chapter (local to the chapter's frame) ──
+const IN_S = 0.8;                      // mascot scale inside the capsule
+const JOIN_SCALE = 0.86, JOIN_Y = 0.05;
+//                    x      y     ry    rz      (0 cobalt · 1 pink · 2 amber · 3 teal)
+const IN_CAPSULE = [[-1.62, 0.0, 0.2, 0.08], [-0.6, -0.12, 0.08, -0.05], [0.52, 0.06, -0.08, 0.07], [1.55, -0.02, -0.2, -0.07]];
+const HALF = [0.93, 0.78, 0.78, 0.93];
+
+/** Composition call-outs for the hero: where each leader line starts (a) and ends (b), in hero-local space. */
+export const HERO_CALLOUTS = IN_CAPSULE.map(([x, y], k) => {
+  const dir = k % 2 === 0 ? 1 : -1; // alternate above / below the capsule
+  return { a: [x, 0.05 + y + dir * (HALF[k] * IN_S * 0.96), 0], b: [x + dir * 0.1, 0.05 + dir * 2.12, 0], dir };
+});
 const MENTOR_SEATS = [205, 285, 75, 155]; // cobalt, pink, amber, teal — degrees around the table
 const seat = (i, half, s, ry) => {
   const a = MENTOR_SEATS[i] * D;
@@ -389,13 +394,8 @@ const seat = (i, half, s, ry) => {
 
 /** POSES[chapter][pill](t) → { p, ry, rz, s }  — pills: 0 cobalt, 1 pink, 2 amber, 3 teal */
 export const POSES = [
-  // 00 hero — standing on the plinth
-  [
-    () => ({ p: [-2.0, -1.7 + 0.93 * 1.12, 0.2], ry: 0.22, rz: 0.1, s: 1.12 }),
-    () => ({ p: [-0.55, -1.7 + 0.78 * 1.12, 0.9], ry: 0.08, rz: -0.04, s: 1.12 }),
-    () => ({ p: [0.85, -1.7 + 0.78 * 1.05, 0.35], ry: -0.1, rz: 0.08, s: 1.05 }),
-    () => ({ p: [2.15, -1.7 + 0.93 * 1.12, 0.05], ry: -0.24, rz: -0.08, s: 1.12 }),
-  ],
+  // 00 hero — sealed inside the capsule, the four ingredients
+  IN_CAPSULE.map(([x, y, ry, rz]) => () => ({ p: [x, 0.05 + y, 0], ry, rz, s: IN_S })),
   // 01 dashboard — each sits on its own tile
   [
     () => ({ p: [-2.2, 1.42 + 0.44 + 0.93 * 0.46, 0.85], ry: 0.25, rz: 0.1, s: 0.46 }),
@@ -429,11 +429,6 @@ export const POSES = [
     () => seat(2, 0.78, 0.62, -0.75),
     () => seat(3, 0.93, 0.66),
   ],
-  // 06 join — flanking the mark
-  [
-    () => ({ p: [-3.35, 0.2, 0.4], ry: 0.3, rz: 0.1, s: 0.74 }),
-    () => ({ p: [-2.0, -0.15, 0.95], ry: 0.2, rz: -0.06, s: 0.7 }),
-    () => ({ p: [2.0, -0.1, 0.95], ry: -0.2, rz: 0.08, s: 0.68 }),
-    () => ({ p: [3.35, 0.2, 0.4], ry: -0.3, rz: -0.1, s: 0.74 }),
-  ],
+  // 06 join — back inside, sealed
+  IN_CAPSULE.map(([x, y, ry, rz]) => () => ({ p: [x * JOIN_SCALE, JOIN_Y + y * JOIN_SCALE, 0], ry, rz, s: IN_S * JOIN_SCALE })),
 ];

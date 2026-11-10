@@ -1,5 +1,6 @@
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/schibsted-grotesk';
+import '@fontsource-variable/jetbrains-mono';
 import '@fontsource/caveat/latin-600.css';
 import '@fontsource/caveat/latin-700.css';
 import './style.css';
@@ -182,6 +183,29 @@ function paint(p) {
   setChapter(clamp(Math.round(p), 0, N - 1));
 }
 
+// composition call-outs: pin each label to its ingredient inside the 3D capsule
+const calloutBox = $('#callouts');
+const calloutEls = $$('.callout').map((el) => ({ el, line: $('.callout__line', el), dot: $('.callout__dot', el) }));
+const calloutPts = [];
+let calloutOn = null;
+function paintCallouts(p) {
+  const heroO = 1 - smooth((Math.abs(p) - 0.03) / 0.1);
+  const alpha = world.callouts(calloutPts) * heroO;
+  const on = alpha > 0.01;
+  if (on !== calloutOn) { calloutOn = on; calloutBox.classList.toggle('is-on', on); }
+  if (!on) return;
+  calloutBox.style.setProperty('--co', alpha.toFixed(3));
+  calloutEls.forEach(({ el, line, dot }, k) => {
+    const c = calloutPts[k];
+    if (el._dir !== c.dir) { el._dir = c.dir; el.classList.toggle('is-up', c.dir > 0); el.classList.toggle('is-down', c.dir < 0); }
+    const dx = c.ax - c.bx, dy = c.ay - c.by;
+    el.style.transform = `translate3d(${c.bx.toFixed(1)}px, ${c.by.toFixed(1)}px, 0)`;
+    line.style.height = `${Math.hypot(dx, dy).toFixed(1)}px`;
+    line.style.transform = `rotate(${(Math.atan2(-dx, dy) * 180 / Math.PI).toFixed(2)}deg)`;
+    dot.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+  });
+}
+
 function countUp() {
   $$('[data-count]').forEach((el) => {
     const to = +el.dataset.count;
@@ -250,6 +274,7 @@ async function boot() {
   const fonts = Promise.all([
     document.fonts.load('700 32px "Bricolage Grotesque Variable"', glyphs),
     document.fonts.load('500 16px "Schibsted Grotesk Variable"', glyphs),
+    document.fonts.load('600 40px "JetBrains Mono Variable"', glyphs),
     document.fonts.load('600 28px "Caveat"', glyphs),
     document.fonts.load('700 28px "Caveat"', glyphs),
   ]).catch(() => {});
@@ -259,7 +284,7 @@ async function boot() {
 
   world = createWorld({ canvas: $('#world'), icon, calm, quality: params.get('q') ?? 'auto' });
   renderRx(false);
-  world.onFrame(paint);
+  world.onFrame((p) => { paint(p); paintCallouts(p); });
   goal = 0.85; label.textContent = 'Warming up';
   await world.warm();
 
