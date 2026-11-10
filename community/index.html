@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkillCures Community — A clearer mind for a brighter you</title>
+  <meta name="description" content="Students, professionals, researchers and mentors across pharmacy & biotech, learning from experts, building on each other’s ideas, and turning them into careers." />
+  <meta name="theme-color" content="#04081a" />
+  <link rel="icon" href="../favicon.png" type="image/png" />
+</head>
+<body class="cm">
+  <a class="skip" href="#hub">Skip to content</a>
+  <canvas id="world" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- labels pinned to the six circles (and you) inside the 3D molecule -->
+  <div class="atoms" id="atoms" aria-hidden="true"></div>
+
+  <!-- loader -->
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <pre class="loader__log" id="loader-log">&gt; community.connect()</pre>
+    <div class="loader__bar"><i id="loader-bar"></i></div>
+    <p><span id="loader-label">Loading members</span> <b id="loader-pct">000</b></p>
+  </div>
+
+  <!-- top bar: logo · section files · links -->
+  <header class="bar" id="bar">
+    <a class="bar__logo" href="../index.html" aria-label="SkillCures home">
+      <img src="../brand/logo-white.png" alt="SkillCures" width="1477" height="224" />
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#hub" data-go="hub" data-file="community.hub">community.hub</a>
+      <a href="#learn" data-go="learn" data-file="pillars.section">pillars.section</a>
+      <a href="#events" data-go="events" data-file="events.section">events.section</a>
+      <a href="#circles" data-go="circles" data-file="circles.section">circles.section</a>
+      <a href="#stories" data-go="stories" data-file="stories.section">stories.section</a>
+      <a href="#join" data-go="join" data-file="join.section">join.section</a>
+    </nav>
+    <div class="bar__end">
+      <a class="bar__link" href="../index.html">Home</a>
+      <a class="bar__link" href="https://www.skillcures.in/mentors/">Mentors</a>
+      <a class="btn btn--primary btn--sm" href="https://www.skillcures.in/signup/">Join the Community</a>
+    </div>
+  </header>
+
+  <!-- console readout (Ethiack-style), types facts about where you are -->
+  <aside class="console" id="console" aria-hidden="true">
+    <div class="console__head"><span>console.log</span><b id="console-step">00/09</b></div>
+    <pre class="console__body" id="console-body"></pre>
+  </aside>
+
+  <div class="hud" id="hud">
+    <ol class="dots" id="dots" aria-hidden="true"></ol>
+    <div class="hud__hint" id="hud-hint" aria-hidden="true"><span class="mouse"><i></i></span><span>Scroll · arrow keys · drag to look</span></div>
+    <div class="hud__nav">
+      <button type="button" id="prev" aria-label="Previous section" disabled>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" id="next" aria-label="Next section">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- 00 · hub -->
+    <section class="station station--left" id="hub" data-station="0" aria-labelledby="hub-h">
+      <div class="station__in">
+        <p class="kicker" data-r><i class="dot"></i>community.hub <span>— free for students &amp; professionals</span></p>
+        <h1 id="hub-h" data-r>A clearer mind <span class="grad">for a brighter you.</span></h1>
+        <p class="lede" data-r>Students, professionals, researchers and mentors across pharmacy &amp; biotech, learning from experts, building on each other’s ideas, and turning them into careers.</p>
+        <div class="cta-row" data-r>
+          <a class="btn btn--primary" href="https://www.skillcures.in/signup/">Join the Community <span aria-hidden="true">→</span></a>
+          <button class="btn btn--ghost" type="button" data-go="events">Explore Events</button>
+        </div>
+        <p class="motto" data-r><b>Learn.</b> <b>Connect.</b> <b>Create.</b> <b>Grow Together.</b> <span>Webinars, mentors and projects, in one place.</span></p>
+        <dl class="stats" data-r>
+          <div><dt>20+</dt><dd>circles, from regulatory affairs to AI</dd></div>
+          <div><dt>700+</dt><dd>colleges &amp; pharma hubs</dd></div>
+          <div><dt>15</dt><dd>upcoming events</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 01–05 · pillars (filled from data) -->
+    <template id="pillar-tpl">
+      <section class="station station--left station--pillar" aria-labelledby="">
+        <div class="station__in">
+          <p class="kicker" data-r><i class="dot"></i>pillars.section <span>— More than a community. A place to grow.</span></p>
+          <ol class="steps" data-r aria-label="Five pillars of growth"></ol>
+          <p class="pillar__kicker" data-r></p>
+          <h2 class="pillar__name" data-r></h2>
+          <p class="lede pillar__body" data-r></p>
+          <ul class="ticks pillar__points" data-r></ul>
+          <div class="pillar__stat" data-r><b></b><span></span></div>
+          <div class="cta-row" data-r><button class="btn btn--ghost pillar__cta" type="button"></button></div>
+        </div>
+      </section>
+    </template>
+
+    <!-- 06 · events -->
+    <section class="station station--left" id="events" data-station="6" aria-labelledby="ev-h">
+      <div class="station__in">
+        <p class="kicker" data-r><i class="dot"></i>events.section <span>— led by practising professionals</span></p>
+        <h2 id="ev-h" data-r>What’s happening <span class="grad">in the community?</span></h2>
+        <div class="filters" data-r role="tablist" aria-label="Event type" id="filters"></div>
+        <article class="event" data-r aria-live="polite" id="event">
+          <header class="event__top">
+            <span class="chip" id="ev-type"></span>
+            <span class="mono" id="ev-when"></span>
+            <span class="mono event__count" id="ev-count"></span>
+          </header>
+          <h3 id="ev-title"></h3>
+          <p class="event__desc" id="ev-desc"></p>
+          <div class="event__who">
+            <span class="avatar" id="ev-avatar"></span>
+            <p><b id="ev-speaker"></b><span id="ev-role"></span></p>
+          </div>
+          <div class="event__seats">
+            <div class="bar-track"><i id="ev-bar"></i></div>
+            <p class="mono"><span id="ev-reg"></span><b id="ev-left"></b></p>
+          </div>
+          <div class="event__tags" id="ev-tags"></div>
+          <div class="cta-row">
+            <a class="btn btn--primary" id="ev-register" href="https://www.skillcures.in/signup/">Register</a>
+            <div class="stepper">
+              <button type="button" id="ev-prev" aria-label="Previous event">←</button>
+              <button type="button" id="ev-next" aria-label="Next event">→</button>
+            </div>
+          </div>
+        </article>
+        <p class="hint mono" data-r>Drag the ring or click a card to bring it forward.</p>
+      </div>
+    </section>
+
+    <!-- 07 · circles -->
+    <section class="station station--right" id="circles" data-station="7" aria-labelledby="ci-h">
+      <div class="station__in">
+        <p class="kicker" data-r><i class="dot"></i>circles.section <span>— six circles, one molecule</span></p>
+        <h2 id="ci-h" data-r>Find your people, <span class="grad">find your community.</span></h2>
+        <p class="lede" data-r>Six circles, each led by someone working in the field. Pick one and ask your first question.</p>
+        <div class="circle-picks" data-r role="tablist" aria-label="Circles" id="circle-picks"></div>
+        <article class="circle" data-r aria-live="polite">
+          <header><span class="mono" id="ci-n"></span><span class="status" id="ci-status"></span></header>
+          <h3 id="ci-name"></h3>
+          <p id="ci-body"></p>
+          <div class="circle__tags" id="ci-tags"></div>
+          <div class="circle__meta mono"><span>Led by <b id="ci-lead"></b></span><span><b id="ci-members"></b> members</span></div>
+          <div class="cta-row"><a class="btn btn--primary" id="ci-join" href="https://www.skillcures.in/signup/">Join</a></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 08 · stories -->
+    <section class="station station--left" id="stories" data-station="8" aria-labelledby="st-h">
+      <div class="station__in">
+        <p class="kicker" data-r><i class="dot"></i>stories.section <span>— people who started with the community</span></p>
+        <div class="story" data-r aria-live="polite" id="story">
+          <p class="mono story__badge" id="st-badge"></p>
+          <h2 id="st-h"><span id="st-lead"></span> <span class="grad" id="st-turn"></span></h2>
+          <p class="lede" id="st-intro"></p>
+          <blockquote class="story__quote">
+            <p id="st-quote"></p>
+            <footer><span class="avatar" id="st-avatar"></span><span><b id="st-author"></b><small id="st-title"></small></span></footer>
+          </blockquote>
+          <ol class="journey" id="st-journey"></ol>
+        </div>
+        <div class="cta-row" data-r>
+          <div class="stepper stepper--wide">
+            <button type="button" id="st-prev" aria-label="Previous story">← Previous</button>
+            <span class="mono" id="st-count">1 / 3</span>
+            <button type="button" id="st-next" aria-label="Next story">Next →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · join -->
+    <section class="station station--right" id="join" data-station="9" aria-labelledby="join-h">
+      <div class="station__in">
+        <p class="kicker" data-r><i class="dot"></i>join.section <span>— free for students</span></p>
+        <h2 id="join-h" data-r>Your next opportunity could start with <span class="grad">one connection.</span></h2>
+        <p class="lede" data-r>Join the SkillCures Community — students, researchers, mentors and biotech pioneers who learn, collaborate and grow together.</p>
+        <form class="joinform" id="join-form" data-r novalidate>
+          <label class="sr" for="email">Email address</label>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Enter your email" required />
+          <button class="btn btn--primary" type="submit">Join Now</button>
+          <p class="joinform__msg" id="join-msg" role="status"></p>
+        </form>
+        <ul class="ticks ticks--row" data-r>
+          <li>Free for students &amp; professionals</li>
+          <li>Moderated &amp; spam-free</li>
+          <li>All 20+ circles from day one</li>
+        </ul>
+        <p class="fine" data-r>Want to explore first? <button type="button" class="linkbtn" data-go="learn">Read the 5 Pillars of Growth</button></p>
+        <footer class="foot" data-r>
+          <span>© 2026 SkillCures · The professional ecosystem for pharmacy &amp; pharma careers</span>
+          <span class="foot__links"><a href="../index.html">Home</a><a href="https://www.skillcures.in/patent/">Patents</a><a href="https://www.skillcures.in/mentors/">Mentors</a><a href="https://www.skillcures.in/signup/">Create Account</a></span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <div id="track" aria-hidden="true"></div>
+  <script type="module" src="/src/community/main.js"></script>
+</body>
+</html>
