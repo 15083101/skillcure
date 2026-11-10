@@ -1,0 +1,26 @@
+// Babylon.js imports in one place. Deep imports keep the bundle to what we use;
+// the plain (non-".pure") modules register their scene components as a side effect.
+export { Engine } from '@babylonjs/core/Engines/engine.js';
+export { Scene } from '@babylonjs/core/scene.js';
+export { TargetCamera } from '@babylonjs/core/Cameras/targetCamera.js';
+export { Vector3, Vector4, Matrix } from '@babylonjs/core/Maths/math.vector.js';
+export { Color3, Color4 } from '@babylonjs/core/Maths/math.color.js';
+export { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder.js';
+export { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+export { TransformNode } from '@babylonjs/core/Meshes/transformNode.js';
+export { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial.js';
+export { ShaderMaterial } from '@babylonjs/core/Materials/shaderMaterial.js';
+export { FresnelParameters } from '@babylonjs/core/Materials/fresnelParameters.js';
+export { Effect } from '@babylonjs/core/Materials/effect.js';
+export { Texture } from '@babylonjs/core/Materials/Textures/texture.js';
+export { DynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture.js';
+export { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight.js';
+export { PointLight } from '@babylonjs/core/Lights/pointLight.js';
+export { GlowLayer } from '@babylonjs/core/Layers/glowLayer.js';
+export { DefaultRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline.js';
+export { ImageProcessingConfiguration } from '@babylonjs/core/Materials/imageProcessingConfiguration.js';
+export { Constants } from '@babylonjs/core/Engines/constants.js';
+import '@babylonjs/core/Layers/effectLayerSceneComponent.js';
+import '@babylonjs/core/PostProcesses/RenderPipeline/postProcessRenderPipelineManagerSceneComponent.js';
+import '@babylonjs/core/Culling/ray.js';
+import '@babylonjs/core/Materials/standardMaterial.js';

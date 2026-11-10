@@ -13,17 +13,22 @@ export const C = {
   pink: '#ff9fbb',
 };
 
-// Chapter list: one entry per camera stop. Pillars get a stop each.
+// One entry per camera stop. `file` groups stops under the top tabs.
 export const CHAPTERS = [
   { id: 'hub', file: 'community.hub', name: 'Community' },
+  { id: 'alone', file: 'community.hub', name: 'Isolated' },
+  { id: 'together', file: 'community.hub', name: 'Connected' },
   { id: 'learn', file: 'pillars.section', name: 'Learn', pillar: 0 },
   { id: 'connect', file: 'pillars.section', name: 'Connect', pillar: 1 },
   { id: 'collaborate', file: 'pillars.section', name: 'Collaborate', pillar: 2 },
   { id: 'discover', file: 'pillars.section', name: 'Discover', pillar: 3 },
   { id: 'grow', file: 'pillars.section', name: 'Grow', pillar: 4 },
+  { id: 'calendar', file: 'events.section', name: 'Calendar' },
   { id: 'events', file: 'events.section', name: 'Events' },
   { id: 'circles', file: 'circles.section', name: 'Circles' },
-  { id: 'stories', file: 'stories.section', name: 'Stories' },
+  { id: 'aman', file: 'stories.section', name: 'Aman', story: 0 },
+  { id: 'divya', file: 'stories.section', name: 'Divya', story: 1 },
+  { id: 'karthik', file: 'stories.section', name: 'Karthik', story: 2 },
   { id: 'join', file: 'join.section', name: 'Join' },
 ];
 
@@ -107,6 +112,7 @@ export const STORIES = [
     community: 'Posted a pitch in the SkillCures Idea Incubator; connected with a bioinformatics scholar in the AI & Tech group within 48 hours. Mentored by senior patent attorney Dr. Narang.',
     result: 'Co-authored a research paper and successfully filed an Indian provisional patent. Currently entering pre-clinical cell permeation trials.',
     metric: 'Provisional Patent', metricLabel: 'Indian Patent Office Registered',
+    shape: 'merge', path: ['Formulation idea', 'Bioinformatics partner', 'Idea Incubator · 48 h', 'Provisional patent'],
     img: 'community/stories/formulation-bench.webp', caption: 'A formulation bench', color: C.teal,
   },
   {
@@ -118,6 +124,7 @@ export const STORIES = [
     community: 'Attended the US-FDA Dossier Masterclass hosted by Vikram Malhotra. Booked a 1-on-1 resume tear-down and participated in 3 mock technical interviews in the Career Group.',
     result: 'Secured two tier-1 pharma offers within 6 weeks; joined a leading pharma company’s Regulatory Affairs division with complete confidence in eCTD documentation.',
     metric: '2 Tier-1 Offers', metricLabel: 'Leading pharma companies',
+    shape: 'split', path: ['Rejections, no feedback', 'Masterclass · mentor · 3 mocks', 'Tier-1 offer', 'Tier-1 offer'],
     img: 'community/stories/offer-signing.webp', caption: 'Signing the offer, Hyderabad', color: C.sky,
   },
   {
@@ -129,6 +136,24 @@ export const STORIES = [
     community: 'Shared the problem statement in the Startups & Innovation circle; recruited a full-stack developer and gathered operational feedback from 30+ pharmacy college lab heads.',
     result: 'Won 1st prize at the SkillCures Bio-Innovate Hackathon, followed by a ₹50 Lakh government biotechnology ignition grant. Now piloting across 12 institutions.',
     metric: '₹50L Grant & 12 Pilots', metricLabel: 'BIRAC BIG Recipient',
+    shape: 'fan', path: ['Hand-written lab logbook', 'Startups circle · hackathon win', '12 pilot institutions'],
     img: 'community/stories/reagent-shelf.webp', caption: 'The inventory problem, ICT Mumbai', color: C.ember,
   },
 ];
+
+// Where members are (lon, lat): the cities and hubs named across the page.
+export const CITIES = [
+  ['Delhi', 77.21, 28.61], ['Mumbai', 72.88, 19.08], ['Bengaluru', 77.59, 12.97], ['Hyderabad', 78.49, 17.39],
+  ['Chennai', 80.27, 13.08], ['Kolkata', 88.36, 22.57], ['Pune', 73.86, 18.52], ['Ahmedabad', 72.57, 23.02],
+  ['Chandigarh', 76.78, 30.73], ['Manipal', 74.79, 13.35], ['Jaipur', 75.79, 26.91], ['Guwahati', 91.74, 26.14],
+];
+export const CITY_LINKS = [[0, 1], [0, 8], [0, 10], [1, 6], [1, 7], [1, 3], [3, 2], [3, 4], [2, 9], [2, 4], [0, 5], [5, 11], [3, 0], [6, 2], [7, 10], [5, 4]];
+
+// Event dates as day numbers (for the calendar river)
+const MONTHS = { Oct: 9, Nov: 10, Dec: 11, Jan: 12 };
+export function eventDay(e) {
+  const m = e.date.match(/^(\d+)\s+(\w{3})/);
+  const year = /2027/.test(e.date) ? 1 : 0;
+  const month = MONTHS[m[2]] + (m[2] === 'Jan' ? 0 : 0);
+  return Date.UTC(2026 + year, month === 12 ? 0 : month, +m[1]) / 86400000;
+}
