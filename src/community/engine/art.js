@@ -6,8 +6,8 @@ export const POP = 'Poppins, ui-sans-serif, system-ui, sans-serif';
 export const GEIST = '"Geist Variable", Geist, ui-sans-serif, system-ui, sans-serif';
 export const MONO = '"Geist Mono Variable", "Geist Mono", ui-monospace, monospace';
 
-const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
-function text(g, s, x, y, { size = 14, weight = 500, family = GEIST, color = '#fff', align = 'left', spacing = 0 } = {}) {
+export const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
+export function text(g, s, x, y, { size = 14, weight = 500, family = GEIST, color = '#fff', align = 'left', spacing = 0 } = {}) {
   g.font = `${weight} ${size}px ${family}`;
   g.fillStyle = color;
   g.textAlign = align;
@@ -15,7 +15,7 @@ function text(g, s, x, y, { size = 14, weight = 500, family = GEIST, color = '#f
   g.fillText(s, x, y);
   g.letterSpacing = '0px';
 }
-function wrap(g, s, x, y, maxW, lh, o, maxLines = 9) {
+export function wrap(g, s, x, y, maxW, lh, o, maxLines = 9) {
   g.font = `${o.weight ?? 500} ${o.size ?? 14}px ${o.family ?? GEIST}`;
   const words = s.split(' ');
   let line = '', yy = y, n = 0;
@@ -31,13 +31,13 @@ function wrap(g, s, x, y, maxW, lh, o, maxLines = 9) {
   return yy;
 }
 /** Ethiack-style crosshair corner marks */
-function crosses(g, x, y, w, h, color = 'rgba(160,190,255,.55)', s = 9) {
+export function crosses(g, x, y, w, h, color = 'rgba(160,190,255,.55)', s = 9) {
   g.strokeStyle = color; g.lineWidth = 1.2;
   [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].forEach(([cx, cy]) => {
     g.beginPath(); g.moveTo(cx - s, cy); g.lineTo(cx + s, cy); g.moveTo(cx, cy - s); g.lineTo(cx, cy + s); g.stroke();
   });
 }
-function glass(g, w, h, r, accent = C.sky) {
+export function glass(g, w, h, r, accent = C.sky) {
   const bg = g.createLinearGradient(0, 0, w * 0.4, h);
   bg.addColorStop(0, 'rgba(14,26,70,.96)');
   bg.addColorStop(1, 'rgba(4,9,30,.98)');

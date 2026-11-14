@@ -1,6 +1,5 @@
 // Shared geometry for both engines. Right-handed, Y up (three.js convention; Babylon runs
 // with useRightHandedSystem = true so the same numbers mean the same place in both).
-import { CITIES, EVENTS, eventDay } from '../data.js';
 
 export const D = Math.PI / 180;
 
@@ -9,20 +8,15 @@ export const D = Math.PI / 180;
 //  side   +1 copy on the left (subject right) · -1 copy right · 0 centred copy
 export const STATIONS = [
   { id: 'hub', F: [0, 0, 0], az: 0, el: 4, dist: 16, side: 1 },
-  { id: 'alone', F: [8, -4, -44], az: 0, el: 0, dist: 7.5, side: 0 },
-  { id: 'together', F: [8, -4, -44], az: 28, el: 14, dist: 30, side: 0 },
-  { id: 'learn', F: [44, -2, -66], az: 22, el: 16, dist: 15.5, side: 1 },
-  { id: 'connect', F: [72, -12, -38], az: -10, el: 60, dist: 27, side: -1 },
-  { id: 'collaborate', F: [92, 4, -80], az: 30, el: 3, dist: 16, side: 1 },
-  { id: 'discover', F: [66, 16, -110], az: 0, el: 46, dist: 24, side: -1 },
-  { id: 'grow', F: [32, 8, -128], az: -20, el: -9, dist: 16, side: 1 },
-  { id: 'calendar', F: [-6, 0, -150], az: 0, el: 13, dist: 15, side: 1 },
-  { id: 'events', F: [-44, 6, -170], az: -15, el: 6, dist: 9.8, side: 1 },
-  { id: 'circles', F: [-76, -4, -146], az: 16, el: 50, dist: 14, side: -1 },
-  { id: 'aman', F: [-100, 2, -112], az: -30, el: 4, dist: 12.5, side: 1 },
-  { id: 'divya', F: [-110, 8, -78], az: -50, el: 6, dist: 12.5, side: 1 },
-  { id: 'karthik', F: [-104, 14, -44], az: -70, el: 8, dist: 12.5, side: 1 },
-  { id: 'join', F: [-44, 4, -8], az: -25, el: 4, dist: 17, side: -1 },
+  { id: 'map', F: [40, -10, -30], az: -10, el: 60, dist: 27, side: -1 },
+  { id: 'events', F: [72, 4, -66], az: 20, el: 6, dist: 9.8, side: 1 },
+  { id: 'sessions', F: [46, -2, -104], az: -22, el: 18, dist: 19.5, side: -1 },
+  { id: 'portal', F: [12, 6, -128], az: 8, el: 4, dist: 15, side: 1 },
+  { id: 'journal', F: [-24, 0, -110], az: -30, el: 12, dist: 15, side: -1 },
+  { id: 'ambassadors', F: [-54, 10, -82], az: -50, el: 14, dist: 22, side: 1 },
+  { id: 'guidelines', F: [-66, -4, -44], az: -70, el: 28, dist: 17.5, side: -1 },
+  { id: 'resumes', F: [-42, 6, -12], az: -40, el: 3, dist: 13.5, side: 1 },
+  { id: 'join', F: [-14, 2, 14], az: -25, el: 4, dist: 17, side: -1 },
 ];
 export const N = STATIONS.length;
 export const IDX = Object.fromEntries(STATIONS.map((s, i) => [s.id, i]));
@@ -64,64 +58,39 @@ export function insideIndia(lon, lat) {
   }
   return inside;
 }
-export const CITY_XZ = CITIES.map(([, lon, lat]) => mapXZ(lon, lat));
-
-// ── calendar river ───────────────────────────────────────────────────────
-const DAYS = EVENTS.map(eventDay);
-export const DAY0 = Math.min(...DAYS) - 6;   // a little lead-in before the first event
-export const DAY1 = Math.max(...DAYS) + 6;
-/** t: 0 (nearest, October) … 1 (farthest, January) → local point on the river */
-export function riverPoint(t) {
-  const z = 6 - t * 44;
-  return [Math.sin(t * Math.PI * 2.2) * 2.6, Math.sin(t * Math.PI * 1.3) * 0.8 - 1.4, z];
-}
-export const dayT = (day) => (day - DAY0) / (DAY1 - DAY0);
-
-// ── the molecule (circles) ───────────────────────────────────────────────
-export const MOL_R = 3.4;
-const TILT_X = 0.42, TILT_Z = -0.2;
-/** atom k (0–5) in the station's local frame; ring lies in a tilted plane */
-export function atomLocal(k) {
-  const a = (k / 6) * Math.PI * 2;
-  let x = Math.cos(a) * MOL_R, y = 0, z = Math.sin(a) * MOL_R;
-  // tilt about X, then Z
-  const cx = Math.cos(TILT_X), sx = Math.sin(TILT_X);
-  [y, z] = [y * cx - z * sx, y * sx + z * cx];
-  const cz = Math.cos(TILT_Z), sz = Math.sin(TILT_Z);
-  [x, y] = [x * cz - y * sz, x * sz + y * cz];
-  return [x, y, z];
-}
-
-// ── story journeys (station-local) ───────────────────────────────────────
-// Each story is drawn as paths of light. Returns { nodes: [[x,y,z],…], paths: [[from,to],…] }.
-export function storyGraph(shape) {
-  const z = 1.1;
-  if (shape === 'merge') {
-    const n = [[-4.4, -2.1, z], [-4.4, 0.5, z], [-0.2, -0.6, z + 0.3], [4.1, 1.3, z]];
-    return { nodes: n, paths: [[0, 2], [1, 2], [2, 3]], ends: [3] };
-  }
-  if (shape === 'split') {
-    const n = [[-4.4, -1.4, z], [-0.4, -0.5, z + 0.3], [4.1, 1.6, z], [4.1, -1.2, z]];
-    return { nodes: n, paths: [[0, 1], [1, 2], [1, 3]], ends: [2, 3] };
-  }
-  // fan: one path into twelve
-  const n = [[-4.4, -1.6, z], [-0.8, -0.4, z + 0.3]];
-  const paths = [[0, 1]];
-  for (let k = 0; k < 12; k++) {
-    const a = (-55 + (k / 11) * 110) * D;
-    n.push([3.0 + Math.cos(a) * 1.7, 0.3 + Math.sin(a) * 1.9, z + Math.sin(a * 2) * 0.4]);
-    paths.push([1, n.length - 1]);
-  }
-  return { nodes: n, paths, ends: n.map((_, i) => i).slice(2) };
-}
-/** quadratic bend so paths read as flows, not straight lines */
-export function pathPoint(a, b, t, bend = 0.6) {
-  const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 + bend, mz = (a[2] + b[2]) / 2;
-  const u = 1 - t;
-  return [u * u * a[0] + 2 * u * t * mx + t * t * b[0], u * u * a[1] + 2 * u * t * my + t * t * b[1], u * u * a[2] + 2 * u * t * mz + t * t * b[2]];
-}
 
 // ── join ring ────────────────────────────────────────────────────────────
 export const RING_R = 5.2;
 export const GAP_ANGLE = -32 * D;  // where "you" fits in
 export const YOU_LOCAL = [Math.cos(GAP_ANGLE) * RING_R, Math.sin(GAP_ANGLE) * RING_R, 0];
+
+// ── sessions portal ──────────────────────────────────────────────────────
+export const PORTAL_R = 1.9;
+/** the four steps sit along the stream, from the link (left) to the room (right) */
+export const PORTAL_STEPS = [[-7.2, -1.2, 0.6], [-3.8, -0.4, 0.4], [0, 0, 0], [4.6, 0.6, 0.4]];
+
+// ── journal: pages fanned over an open book ─────────────────────────────
+export function pagePose(k, n = 6) {
+  const t = (k - (n - 1) / 2) / ((n - 1) / 2);   // -1 … 1
+  return { pos: [t * 3.9, 0.1 + (1 - t * t) * 0.7, -Math.abs(t) * 1.4], rotY: -t * 0.45, rotZ: -t * 0.1 };
+}
+
+// ── guidelines: six monoliths in a circle ───────────────────────────────
+export const SLAB_R = 4.6;
+export function slabPose(k) {
+  const a = (k / 6) * Math.PI * 2 + Math.PI / 2;
+  return { pos: [Math.cos(a) * SLAB_R, 0, Math.sin(a) * SLAB_R], rotY: -a + Math.PI / 2, a };
+}
+
+// ── resumes: a gentle arc of sheets ─────────────────────────────────────
+export function sheetPose(k, n = 6) {
+  const t = (k - (n - 1) / 2) / ((n - 1) / 2);
+  return { pos: [t * 4.4, 0.2, -Math.abs(t) * 1.8 - 0.4], rotY: -t * 0.38 };
+}
+
+/** quadratic bend so streams read as flows, not straight lines */
+export function pathPoint(a, b, t, bend = 0.6) {
+  const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2 + bend, mz = (a[2] + b[2]) / 2;
+  const u = 1 - t;
+  return [u * u * a[0] + 2 * u * t * mx + t * t * b[0], u * u * a[1] + 2 * u * t * my + t * t * b[1], u * u * a[2] + 2 * u * t * mz + t * t * b[2]];
+}

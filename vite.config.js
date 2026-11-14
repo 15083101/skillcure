@@ -13,6 +13,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         community: resolve(import.meta.dirname, 'community/index.html'),
+        community3d: resolve(import.meta.dirname, 'community/3d.html'),
       },
     },
   },
