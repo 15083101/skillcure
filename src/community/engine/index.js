@@ -3,13 +3,12 @@
 //   three.js    → the member swarm + fly-through statements, on a transparent canvas above
 // Both are driven every frame by one camera rig, so they line up exactly.
 import * as THREE from 'three';
-import { Texture } from './bjs.js';
 import { createStage } from './stage.js';
 import { createPieces } from './pieces.js';
 import { createSwarm } from './swarm.js';
 import { buildFormations, PORTRAIT } from './formations.js';
-import { STATIONS, N, IDX, camPos, D, atomLocal, toWorld } from './layout.js';
-import { CIRCLES, EVENTS, STORIES } from '../data.js';
+import { STATIONS, N, IDX, camPos, D, slabPose, pagePose, sheetPose, toWorld } from './layout.js';
+import { ALL_EVENTS, JOURNAL } from '../content.js';
 
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -26,19 +25,17 @@ const loadImage = (src) => new Promise((res, rej) => { const im = new Image(); i
 export async function loadAssets(base, onProgress = () => {}) {
   const urls = {
     portrait: `${base}community/hero/portrait.webp`,
-    circles: CIRCLES.map((c) => `${base}${c.img}`),
-    stories: STORIES.map((s) => `${base}${s.img}`),
-    posters: EVENTS.map((e) => (e.poster ? `${base}${e.poster}` : null)),
+    journal: JOURNAL.posts.map((p) => `${base}${p.img}`),
+    posters: ALL_EVENTS.map((e) => (e.poster ? `${base}${e.poster}` : null)),
   };
-  const all = [urls.portrait, ...urls.circles, ...urls.stories, ...urls.posters.filter(Boolean)];
+  const all = [...new Set([urls.portrait, ...urls.journal, ...urls.posters.filter(Boolean)])];
   let done = 0;
   const imgs = new Map();
   await Promise.all(all.map((u) => loadImage(u).then((im) => { imgs.set(u, im); onProgress(++done / all.length); })));
   return {
     urls,
     portrait: imgs.get(urls.portrait),
-    circleImgs: urls.circles.map((u) => imgs.get(u)),
-    storyImgs: urls.stories.map((u) => imgs.get(u)),
+    journalImgs: urls.journal.map((u) => imgs.get(u)),
     posters: urls.posters.map((u) => (u ? imgs.get(u) : null)),
   };
 }
@@ -51,22 +48,19 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
 
   // ── engines ────────────────────────────────────────────────────────────
   const stage = createStage({ canvas: babylonCanvas, dpr, calm, quality: tierStart });
-  const tex = (url) => new Texture(url, stage.scene, false, true);
-  const pieces = createPieces(stage, {
-    posters: assets.posters,
-    circleTex: assets.urls.circles.map(tex), circleAspect: assets.circleImgs.map((im) => im.width / im.height),
-    storyTex: assets.urls.stories.map(tex), storyAspect: assets.storyImgs.map((im) => im.width / im.height),
-  });
+  const pieces = createPieces(stage, { posters: assets.posters, journalImgs: assets.journalImgs });
   const COUNT = coarse ? 8000 : 14000;
   const formations = buildFormations(COUNT, { portrait: assets.portrait });
   const swarm = createSwarm({ canvas: threeCanvas, formations, count: COUNT, calm });
   const aniso = 8;
   if (!calm) {
-    swarm.addStatement(2, 'LEARN. CONNECT. CREATE.', 'grow together', aniso);
-    swarm.addStatement(7, 'WHAT’S HAPPENING', 'webinars · workshops · hackathons', aniso);
-    swarm.addStatement(9, 'FIND YOUR PEOPLE', 'each circle led by someone in the field', aniso);
-    swarm.addStatement(10, 'REAL PEOPLE.', 'real connections · measurable outcomes', aniso);
-    swarm.addStatement(13, 'ONE CONNECTION.', 'could start your next opportunity', aniso);
+    swarm.addStatement(0, 'EVERY EVENT', 'from across India, in one calendar', aniso);
+    swarm.addStatement(2, 'TEACH WHAT YOU KNOW', 'host a session · bring your own link', aniso);
+    swarm.addStatement(4, 'FIELD NOTES', 'written by the SkillCures team', aniso);
+    swarm.addStatement(5, 'YOUR CAMPUS', 'bring the community to it', aniso);
+    swarm.addStatement(6, 'HOW WE BEHAVE', 'useful · respectful · safe', aniso);
+    swarm.addStatement(7, 'LEARN FROM WHAT WORKED', 'resumes that got the interview', aniso);
+    swarm.addStatement(8, 'ONE CONNECTION.', 'could start your next opportunity', aniso);
   }
 
   // ── camera rig ─────────────────────────────────────────────────────────
@@ -88,7 +82,7 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
   const pointer = new THREE.Vector2();
   const pos = new THREE.Vector3(), look = new THREE.Vector3(), v = new THREE.Vector3(), right = new THREE.Vector3(), camUp = new THREE.Vector3(), fwd = new THREE.Vector3(), off = new THREE.Vector3(), tmp = new THREE.Vector3();
   let W = 1, H = 1, aspect = 1, distK = 1, shiftMag = 0.2;
-  const sel = { circle: 0, story: 0 };
+  const sel = { slab: 0 };
   const ndcShift = [0, 0];
 
   function resize() {
@@ -118,9 +112,16 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
 
     // the camera leans toward what you picked
     off.set(0, 0, 0);
-    if (weights[IDX.circles] > 0) {
-      const a = toWorld(IDX.circles, ...atomLocal(sel.circle));
-      off.set(a[0], a[1], a[2]).sub(focus[IDX.circles]).multiplyScalar(0.32 * weights[IDX.circles]);
+    const lean = (id, local, k) => {
+      if (weights[IDX[id]] <= 0) return;
+      const a = toWorld(IDX[id], ...local);
+      off.add(tmp.set(a[0], a[1], a[2]).sub(focus[IDX[id]]).multiplyScalar(k * weights[IDX[id]]));
+    };
+    lean('journal', pagePose(pieces.pages.selected).pos, 0.55);
+    lean('resumes', sheetPose(pieces.sheets.selected).pos, 0.6);
+    if (weights[IDX.guidelines] > 0) {
+      const a = toWorld(IDX.guidelines, ...slabPose(sel.slab).pos);
+      off.add(tmp.set(a[0], a[1], a[2]).sub(focus[IDX.guidelines]).multiplyScalar(0.3 * weights[IDX.guidelines]));
     }
     look.add(off); pos.add(off);
 
@@ -128,7 +129,7 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
     rig.px += (pointer.x - rig.px) * Math.min(1, dt * 3);
     rig.py += (pointer.y - rig.py) * Math.min(1, dt * 3);
     if (!rig.dragging) { rig.dragX *= Math.exp(-dt * 3.2); rig.dragY *= Math.exp(-dt * 3.2); }
-    v.subVectors(pos, look).multiplyScalar(distK * (1 - weights[IDX.circles] * 0.12));
+    v.subVectors(pos, look).multiplyScalar(distK * (1 - weights[IDX.guidelines] * 0.1));
     v.applyAxisAngle(UP, -rig.px * 0.06 * m + rig.dragX + Math.sin(t * 0.21) * 0.03 * m);
     right.crossVectors(UP, v).normalize();
     v.applyAxisAngle(right, rig.py * 0.04 * m + rig.dragY + Math.sin(t * 0.17 + 1) * 0.015 * m);
@@ -176,7 +177,7 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
 
   // ── pointer: parallax, drag-to-look, ring drag, picking ────────────────
   let downAt = null, dragMode = null, hovered = null;
-  const listeners = { event: () => {}, circle: () => {}, story: () => {} };
+  const listeners = { event: () => {}, page: () => {}, slab: () => {}, sheet: () => {} };
   const near = (k) => Math.abs(rig.p - k) < 0.35;
   const hubPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const ray = new THREE.Raycaster();
@@ -186,12 +187,14 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
     const x = ev.clientX - rect.left, y = ev.clientY - rect.top;
     let list = null, kind = null;
     if (near(IDX.events)) { list = pieces.pick.events; kind = 'event'; }
-    else if (near(IDX.circles)) { list = pieces.pick.atoms; kind = 'circle'; }
+    else if (near(IDX.journal)) { list = pieces.pick.pages; kind = 'page'; }
+    else if (near(IDX.guidelines)) { list = pieces.pick.slabs; kind = 'slab'; }
+    else if (near(IDX.resumes)) { list = pieces.pick.sheets; kind = 'sheet'; }
     if (!list) return null;
     const res = stage.scene.pick(x, y, (m) => list.includes(m));
     if (!res?.hit) return null;
     const md = res.pickedMesh.metadata;
-    return { kind, i: kind === 'event' ? md.event : md.atom };
+    return { kind, i: md[kind] ?? md.event };
   }
   window.addEventListener('pointermove', (ev) => {
     if (ev.pointerType !== 'touch') pointer.set((ev.clientX / W) * 2 - 1, (ev.clientY / H) * 2 - 1);
@@ -231,7 +234,9 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
     if (dragMode === 'ring') { const k = pieces.ring.release(); if (moved > 6) listeners.event(k); }
     if (moved < 6 && hit) {
       if (hit.kind === 'event') { pieces.ring.select(hit.i); listeners.event(hit.i); }
-      if (hit.kind === 'circle') { sel.circle = hit.i; pieces.molecule.st.selected = hit.i; listeners.circle(hit.i); }
+      if (hit.kind === 'page') { pieces.pages.selected = hit.i; listeners.page(hit.i); }
+      if (hit.kind === 'slab') { sel.slab = hit.i; pieces.slabs.st.selected = hit.i; listeners.slab(hit.i); }
+      if (hit.kind === 'sheet') { pieces.sheets.selected = hit.i; listeners.sheet(hit.i); }
     }
     downAt = null; dragMode = null; rig.dragging = false; babylonCanvas.style.cursor = 'grab';
   };
@@ -296,7 +301,9 @@ export function createWorld({ babylonCanvas, threeCanvas, assets, calm = false, 
     get weights() { return weights; },
     onFrame(fn) { onFrame = fn; },
     on(kind, fn) { listeners[kind] = fn; },
-    selectCircle(k) { sel.circle = k; pieces.molecule.st.selected = k; },
+    selectPage(k) { pieces.pages.selected = k; },
+    selectSlab(k) { sel.slab = k; pieces.slabs.st.selected = k; },
+    selectSheet(k) { pieces.sheets.selected = k; },
     selectEvent(k) { pieces.ring.select(k); },
     filterEvents(type) { pieces.ring.filter(type); },
     joined() { pieces.you.pulse(); },

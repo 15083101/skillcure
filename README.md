@@ -41,49 +41,63 @@ Navigation: scroll / swipe (any deliberate scroll carries you to the next chapte
 PageUp/PageDown, Home/End, the chapter rail, the ↑ ↓ buttons, and deep links (`#patents`, `#join`, …).
 Drag the background to look around; hover or tap a pill to make it jump.
 
-## Community page (`community/index.html`)
+## Community pages
 
-Two engines render one world, driven by one camera rig:
+Two versions of the community page share one content file (`src/community/content.js`), so copy
+changes show up in both.
 
-- **Babylon.js** draws the solid world: glass atoms, glow, light cones, the radar, the event ring,
-  photo arches, plus a filmic post-processing pipeline (bloom, ACES tone mapping, chromatic
-  aberration, film grain, vignette) and a glow layer.
-- **three.js** draws the *members*: a swarm of ~14,000 particles on a transparent canvas above,
-  morphing between 15 formations on the GPU while the camera flies.
+| Page | What it is |
+|------|------------|
+| `community/index.html` | **2D** — the default. Clean editorial layout, light motion, fast and accessible. |
+| `community/3d.html` | **3D** — Babylon.js (solid world, glow, post-processing) + three.js (a ~14k-particle member swarm), one camera rig. |
 
-Typography: **Poppins** (headings), **Geist** (text), **Geist Mono** (labels, tabs, console).
+### The six features
 
-| # | Section       | What the swarm becomes                | Babylon.js set piece                      |
-|---|---------------|----------------------------------------|-------------------------------------------|
-| 0 | Hub           | the hero portrait in pixels            | orbits with the six circles riding them   |
-| 1 | Isolated      | one learner, everyone else far away    | a faint sonar                             |
-| 2 | Connected     | a network of hundreds                  | —                                         |
-| 3 | Learn         | a lecture hall facing one practitioner | stage, light cone, seat rows              |
-| 4 | Connect       | a dot-matrix map of India              | city pins, arcs, travelling sparks        |
-| 5 | Collaborate   | a flask and `</>` pulled together      | the bond and its spark                    |
-| 6 | Discover      | radar rings                            | the sweep; opportunities light up         |
-| 7 | Grow          | a double helix                         | rings of growth                           |
-| 8 | Calendar      | a river of time, Oct → Jan             | month gates, 15 event beacons             |
-| 9 | Events        | a halo                                 | ring of all 15 event cards (drag/filter)  |
-|10 | Circles       | member clouds around each atom         | glass atoms with dithered photos          |
-|11–13 | Stories    | each member's path drawn as light      | photo arch, journey nodes, outcome sticker |
-|14 | Join          | a ring with a gap your size            | "you" flies in and fills it               |
+1. **Events** — every pharma event in India in one calendar: industry expos and congresses plus
+   SkillCures events. Filter by format, city and source; add to calendar (.ics); organisers submit
+   events through a form.
+2. **Mentor sessions** — anyone can propose a lecture, workshop, AMA or panel and bring their own
+   meeting link (Zoom, Meet, Teams, YouTube Live and Webex are recognised). Four-step flow, host perks
+   and host guidelines.
+3. **The Journal** — articles written and maintained by the SkillCures team; six launch pieces with
+   a full-text reader.
+4. **Campus ambassadors** — who we look for, what ambassadors do and get, the selection steps, an
+   application form and ambassador guidelines.
+5. **Community guidelines** — six guidelines (including confidentiality and PvPI for suspected ADRs),
+   the enforcement ladder and how to report.
+6. **Resume library** — annotated resumes by role with numbered "why it works" notes, a checklist and
+   a review CTA. Current resumes are **illustrative samples** and are labelled as such.
 
-Details (pillar bullet points, cities, journey steps) are labels pinned to 3D points, not text blocks.
+### Forms
 
-| What                                   | File                                   |
-|----------------------------------------|----------------------------------------|
-| All copy and data                      | `src/community/data.js`                |
-| Where each section sits + shared geometry | `src/community/engine/layout.js`    |
-| Swarm formations                       | `src/community/engine/formations.js`   |
-| Swarm renderer (three.js)              | `src/community/engine/swarm.js`        |
-| Babylon stage, post, materials, dither shader | `src/community/engine/stage.js` |
-| Babylon set pieces + labels            | `src/community/engine/pieces.js`       |
-| Camera rig, picking, frame loop        | `src/community/engine/index.js`        |
-| Page structure / scroll / panels       | `community/index.html`, `src/community/main.js`, `src/community/style.css` |
+All forms validate in the browser and POST JSON to `FORM_ENDPOINT` in `src/community/content.js`.
+While it is `null`, the page says the entry is valid but **nothing was sent** — set it to your form
+service (or API route) to start receiving submissions. The join form hands the email to `/signup/`.
 
-The engines load as a separate chunk after the page shell. Babylon's shaders are split into small
-on-demand files, so `dist/` contains ~100 JS files (~650 KB gzipped in total including three.js).
+### 3D sections
+
+| # | Section | Swarm becomes | Babylon.js set piece |
+|---|---------|---------------|----------------------|
+| 0 | Hub | the hero portrait in pixels | the six features orbiting the head |
+| 1 | Events map | India as a dot-matrix | beacons sized by events per city, an "Online" halo |
+| 2 | Events | a halo | ring of all 18 event cards (drag / filter / step) |
+| 3 | Sessions | a lecture hall | stage, light cone, the four formats |
+| 4 | Your link | a vortex into a portal | the four steps along the stream, a live session screen |
+| 5 | Journal | an open book | six article pages fanned above it (click to read) |
+| 6 | Ambassadors | a globe of campuses | ambassador beacons |
+| 7 | Guidelines | a protective dome | six monoliths, one per guideline |
+| 8 | Resumes | a pinboard wall | six resume sheets with numbered notes |
+| 9 | Join | a ring with a gap | "you" flies in and fills it |
+
+| What | File |
+|------|------|
+| All copy (both pages) | `src/community/content.js` (+ `data.js` for the community event list) |
+| Form handling, calendar files | `src/community/forms.js` |
+| 2D page | `community/index.html`, `src/community/classic/` |
+| 3D page | `community/3d.html`, `src/community/main3d.js`, `src/community/style.css` |
+| 3D layout / formations / set pieces | `src/community/engine/{layout,formations,pieces}.js` |
+| 3D canvas artwork | `src/community/engine/{art,art2}.js` |
+| Engines, camera rig, picking | `src/community/engine/{stage,swarm,index}.js` |
 
 ## Where to change things
 

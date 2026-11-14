@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkillCures Community in 3D — Where pharma careers are built together</title>
+  <meta name="description" content="Pharma events from across India, mentor-led sessions, the SkillCures Journal, campus ambassadors, community guidelines and a library of annotated resumes — in 3D." />
+  <meta name="theme-color" content="#04081a" />
+  <link rel="icon" href="../favicon.png" type="image/png" />
+</head>
+<body class="cm">
+  <a class="skip" href="#hub">Skip to content</a>
+  <div class="stage" id="stage" aria-hidden="true"><canvas id="bjs"></canvas><canvas id="swarm"></canvas></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="pins" id="pins" aria-hidden="true"></div>
+
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <pre class="loader__log" id="loader-log">&gt; community.connect()</pre>
+    <div class="loader__bar"><i id="loader-bar"></i></div>
+    <p><span id="loader-label">Loading</span> <b id="loader-pct">000</b></p>
+  </div>
+
+  <header class="bar" id="bar">
+    <a class="bar__logo" href="../index.html" aria-label="SkillCures home"><img src="../brand/logo-white.png" alt="SkillCures" width="1477" height="224" /></a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#hub" data-go="hub" data-file="community.hub">community.hub</a>
+      <a href="#map" data-go="map" data-file="events.section">events</a>
+      <a href="#sessions" data-go="sessions" data-file="sessions.section">sessions</a>
+      <a href="#journal" data-go="journal" data-file="journal.section">journal</a>
+      <a href="#ambassadors" data-go="ambassadors" data-file="ambassadors.section">ambassadors</a>
+      <a href="#guidelines" data-go="guidelines" data-file="guidelines.section">guidelines</a>
+      <a href="#resumes" data-go="resumes" data-file="resumes.section">resumes</a>
+    </nav>
+    <div class="bar__end">
+      <a class="bar__link" href="./index.html">2D view</a>
+      <a class="btn btn--primary btn--sm" href="https://www.skillcures.in/signup/">Join free</a>
+    </div>
+  </header>
+
+  <aside class="console" id="console" aria-hidden="true">
+    <div class="console__head"><span>console.log</span><b id="console-step">00/09</b></div>
+    <pre class="console__body" id="console-body"></pre>
+  </aside>
+
+  <div class="hud" id="hud">
+    <ol class="dots" id="dots" aria-hidden="true"></ol>
+    <div class="hud__hint" aria-hidden="true"><span class="mouse"><i></i></span><span>Scroll · arrow keys · drag</span></div>
+    <div class="hud__nav">
+      <button type="button" id="prev" aria-label="Previous section" disabled><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button type="button" id="next" aria-label="Next section"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="station" id="hub" aria-labelledby="hub-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>community.hub <span>— free for students</span></p>
+      <h1 id="hub-h" data-r></h1>
+      <p class="lede" data-r id="hub-lede"></p>
+      <div class="cta-row" data-r><a class="btn btn--primary" href="https://www.skillcures.in/signup/">Join the community →</a><button class="btn btn--ghost" type="button" data-go="map">Take the tour</button></div>
+      <ul class="featurechips" data-r id="hub-features"></ul>
+    </div></section>
+
+    <section class="station" id="map" aria-labelledby="map-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>events.section <span>— 01</span></p>
+      <h2 id="map-h" data-r></h2>
+      <ol class="numlist" data-r id="map-how"></ol>
+      <div class="cta-row" data-r><button class="btn btn--primary" type="button" data-open="dlg-event">Submit an event</button><button class="btn btn--ghost" type="button" data-go="events">Browse all</button></div>
+    </div></section>
+
+    <section class="station" id="events" aria-labelledby="ev-title"><div class="station__in">
+      <div class="filters" data-r role="group" aria-label="Format" id="filters"></div>
+      <article class="event" data-r aria-live="polite" id="event">
+        <header class="event__top"><span class="chip" id="ev-type"></span><span class="chip chip--src" id="ev-src"></span><span class="mono event__count" id="ev-count"></span></header>
+        <h3 id="ev-title"></h3>
+        <p class="event__desc" id="ev-desc"></p>
+        <p class="mono event__where" id="ev-where"></p>
+        <div class="cta-row">
+          <a class="btn btn--primary btn--sm" id="ev-cal" href="#">Add to calendar</a>
+          <a class="btn btn--ghost btn--sm" id="ev-reg" href="https://www.skillcures.in/signup/">Register</a>
+          <div class="stepper"><button type="button" id="ev-prev" aria-label="Previous event">←</button><button type="button" id="ev-next" aria-label="Next event">→</button></div>
+        </div>
+      </article>
+      <p class="hint mono" data-r>Drag the ring · click a card · ← → keys</p>
+    </div></section>
+
+    <section class="station" id="sessions" aria-labelledby="ss-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>sessions.section <span>— 02</span></p>
+      <h2 id="ss-h" data-r></h2>
+      <p class="lede" data-r id="ss-lede"></p>
+      <ul class="ticks" data-r id="ss-perks"></ul>
+      <div class="cta-row" data-r><button class="btn btn--primary" type="button" data-open="dlg-session">Propose a session</button></div>
+    </div></section>
+
+    <section class="station" id="portal" aria-labelledby="pt-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>sessions.section <span>— how it works</span></p>
+      <h2 id="pt-h" data-r>Bring your own link. <span class="grad">We bring the room.</span></h2>
+      <ol class="numlist numlist--steps" data-r id="pt-steps"></ol>
+      <div class="cta-row" data-r><button class="btn btn--primary" type="button" data-open="dlg-session">Propose a session</button><button class="linkbtn" type="button" data-open="dlg-session" data-focus="rules">Host guidelines</button></div>
+    </div></section>
+
+    <section class="station" id="journal" aria-labelledby="jr-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>journal.section <span>— 03</span></p>
+      <h2 id="jr-h" data-r></h2>
+      <p class="lede" data-r id="jr-lede"></p>
+      <ol class="articles" data-r id="jr-list"></ol>
+    </div></section>
+
+    <section class="station" id="ambassadors" aria-labelledby="am-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>ambassadors.section <span>— 04</span></p>
+      <h2 id="am-h" data-r></h2>
+      <p class="lede" data-r id="am-lede"></p>
+      <ul class="perkchips" data-r id="am-get"></ul>
+      <ol class="track" data-r id="am-steps"></ol>
+      <div class="cta-row" data-r><button class="btn btn--primary" type="button" data-open="dlg-amb">Apply to be an ambassador</button><button class="linkbtn" type="button" data-open="dlg-amb" data-focus="guide">Ambassador guidelines</button></div>
+    </div></section>
+
+    <section class="station" id="guidelines" aria-labelledby="gl-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>guidelines.section <span>— 05</span></p>
+      <h2 id="gl-h" data-r></h2>
+      <div class="rulepicks" data-r role="tablist" aria-label="Guidelines" id="gl-picks"></div>
+      <article class="rulecard" data-r aria-live="polite"><small class="mono" id="gl-n"></small><h3 id="gl-name"></h3><p id="gl-body"></p></article>
+      <p class="fine" data-r id="gl-enf"></p>
+    </div></section>
+
+    <section class="station" id="resumes" aria-labelledby="rs-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>resumes.section <span>— 06</span></p>
+      <h2 id="rs-h" data-r></h2>
+      <div class="roletabs" data-r role="tablist" aria-label="Role" id="rs-tabs"></div>
+      <ol class="notelist" data-r aria-live="polite" id="rs-notes"></ol>
+      <p class="fine" data-r id="rs-sample"></p>
+      <div class="cta-row" data-r><a class="btn btn--primary btn--sm" href="https://www.skillcures.in/signup/">Get your resume reviewed</a></div>
+    </div></section>
+
+    <section class="station" id="join" aria-labelledby="join-h"><div class="station__in">
+      <p class="kicker" data-r><i class="dot"></i>join.section <span>— free for students</span></p>
+      <h2 id="join-h" data-r></h2>
+      <form class="joinform" id="form-join" data-r novalidate>
+        <label class="sr" for="email">Email address</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Enter your email" required />
+        <button class="btn btn--primary" type="submit">Join now</button>
+        <p class="form__msg joinform__msg" role="status"></p>
+      </form>
+      <ul class="ticks" data-r id="join-ticks"></ul>
+      <footer class="foot" data-r><span>© 2026 SkillCures</span><span class="foot__links"><a href="../index.html">Home</a><a href="./index.html">2D view</a><a href="https://www.skillcures.in/mentors/">Mentors</a><a href="https://www.skillcures.in/signup/">Create account</a></span></footer>
+    </div></section>
+  </main>
+
+  <!-- dialogs: forms and the article reader live here, so the 3D panels stay short -->
+  <dialog class="dlg" id="dlg-event" aria-labelledby="dlg-event-h"><div class="dlg__in">
+    <button class="dlg__x" type="button" aria-label="Close">✕</button>
+    <p class="kicker"><i class="dot"></i>events.submit</p>
+    <h2 id="dlg-event-h">List your event for the whole community.</h2>
+    <p class="lede">Conferences, workshops, webinars, college fests with a pharma track. We check every listing and publish it within two working days.</p>
+    <form class="form" id="form-event" novalidate>
+      <div class="grid2">
+        <label class="field"><span>Event name</span><input name="name" required maxlength="120" /></label>
+        <label class="field"><span>Organiser</span><input name="organiser" required maxlength="80" /></label>
+        <label class="field"><span>Date</span><input name="date" type="date" required /></label>
+        <label class="field"><span>Format</span><select name="format" required><option value="">Choose…</option></select></label>
+        <label class="field"><span>City, or “Online”</span><input name="city" required maxlength="60" /></label>
+        <label class="field"><span>Registration link</span><input name="link" type="url" placeholder="https://" required /></label>
+      </div>
+      <label class="field"><span>Your email</span><input name="email" type="email" required /></label>
+      <div class="form__foot"><button class="btn btn--primary" type="submit">Submit event</button><p class="form__msg" role="status"></p></div>
+    </form>
+  </div></dialog>
+
+  <dialog class="dlg" id="dlg-session" aria-labelledby="dlg-session-h"><div class="dlg__in">
+    <button class="dlg__x" type="button" aria-label="Close">✕</button>
+    <p class="kicker"><i class="dot"></i>sessions.propose</p>
+    <h2 id="dlg-session-h">Propose a session.</h2>
+    <form class="form" id="form-session" novalidate>
+      <div class="grid2">
+        <label class="field"><span>Your name</span><input name="name" required maxlength="80" autocomplete="name" /></label>
+        <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email" /></label>
+        <label class="field"><span>Role</span><input name="role" required maxlength="80" placeholder="e.g. QA Manager" /></label>
+        <label class="field"><span>Organisation</span><input name="org" maxlength="80" /></label>
+      </div>
+      <label class="field"><span>Session title</span><input name="title" required maxlength="120" /></label>
+      <div class="grid2">
+        <label class="field"><span>Format</span><select name="format" required></select></label>
+        <label class="field"><span>Date &amp; time</span><input name="when" type="datetime-local" required /></label>
+      </div>
+      <label class="field field--link"><span>Meeting link</span><input name="link" type="url" placeholder="Zoom, Meet, Teams, YouTube Live…" required /><b class="platform" id="ss-platform" aria-live="polite"></b></label>
+      <label class="field"><span>What will people learn? <small>(max 400 characters)</small></span><textarea name="about" rows="3" maxlength="400" required></textarea></label>
+      <label class="check"><input type="checkbox" name="agree" required /><span>I’ll follow the host guidelines.</span></label>
+      <div class="form__foot"><button class="btn btn--primary" type="submit">Send proposal</button><p class="form__msg" role="status"></p></div>
+    </form>
+    <h3 class="dlg__h3" id="dlg-rules">Host guidelines</h3>
+    <dl class="rules" id="ss-rules"></dl>
+  </div></dialog>
+
+  <dialog class="dlg" id="dlg-amb" aria-labelledby="dlg-amb-h"><div class="dlg__in">
+    <button class="dlg__x" type="button" aria-label="Close">✕</button>
+    <p class="kicker"><i class="dot"></i>ambassadors.apply</p>
+    <h2 id="dlg-amb-h">Apply · about 5 minutes</h2>
+    <form class="form" id="form-amb" novalidate>
+      <div class="grid2">
+        <label class="field"><span>Full name</span><input name="name" required maxlength="80" autocomplete="name" /></label>
+        <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email" /></label>
+        <label class="field"><span>College</span><input name="college" required maxlength="120" /></label>
+        <label class="field"><span>City</span><input name="city" required maxlength="60" /></label>
+        <label class="field"><span>Programme</span><select name="programme" required><option value="">Choose…</option><option>B.Pharm</option><option>M.Pharm</option><option>Pharm.D</option><option>Life sciences</option></select></label>
+        <label class="field"><span>Year</span><select name="year" required><option value="">Choose…</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th / 6th</option><option>PG</option></select></label>
+      </div>
+      <label class="field"><span>Why you? <small>(max 300 characters)</small></span><textarea name="why" rows="3" maxlength="300" required></textarea></label>
+      <label class="check"><input type="checkbox" name="agree" required /><span>I’ve read the ambassador guidelines below.</span></label>
+      <div class="form__foot"><button class="btn btn--primary" type="submit">Send application</button><p class="form__msg" role="status"></p></div>
+    </form>
+    <h3 class="dlg__h3" id="dlg-guide">Ambassador guidelines</h3>
+    <div class="acc" id="amb-guide"></div>
+    <p class="warn" id="amb-enf"></p>
+  </div></dialog>
+
+  <dialog class="dlg dlg--paper" id="dlg-read" aria-labelledby="read-h"><div class="dlg__in">
+    <button class="dlg__x" type="button" aria-label="Close article">✕</button>
+    <p class="kicker" id="read-tag"></p>
+    <h2 id="read-h"></h2>
+    <p class="mono read-meta" id="read-meta"></p>
+    <div class="read-body" id="read-body"></div>
+    <p class="mono read-sign">— The SkillCures team</p>
+  </div></dialog>
+
+  <div id="track" aria-hidden="true"></div>
+  <script type="module" src="/src/community/main3d.js"></script>
+</body>
+</html>

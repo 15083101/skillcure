@@ -3,7 +3,7 @@
 export { Engine } from '@babylonjs/core/Engines/engine.js';
 export { Scene } from '@babylonjs/core/scene.js';
 export { TargetCamera } from '@babylonjs/core/Cameras/targetCamera.js';
-export { Vector3, Vector4, Matrix } from '@babylonjs/core/Maths/math.vector.js';
+export { Vector3, Vector4, Matrix, Quaternion } from '@babylonjs/core/Maths/math.vector.js';
 export { Color3, Color4 } from '@babylonjs/core/Maths/math.color.js';
 export { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder.js';
 export { Mesh } from '@babylonjs/core/Meshes/mesh.js';
